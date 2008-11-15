@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<link href="/css/screen.css" rel="stylesheet" type="text/css"/>
+<title>{% block title %}{{ title }}{% endblock %}</title>
+</head>
+<body>
+{% block body %}
+<div id="page">
+<div id="header">
+{% block header %}
+<div id="login">
+{% if user %}
+<span class="item nickname">{{ user.nickname }}</span> |
+<span class="item"><a href="/myradars">My Radars</a></span> |
+<span class="item"><a href="/myradars/add">Add a Radar</a></span> |
+<span class="item"><a href="{{ logout_url|escape }}">Sign out</a></span>
+{% else %}
+<span class="item"><a href="{{ login_url|escape }}">Sign in</a></span>
+{% endif %}
+</div>
+<h1><a href="/">Open Radar</a></h1>
+<h2>Community bug reports</h2>
+{% endblock %}
+</div>
+<div id="content">
+{% block content %}
+{% endblock %}
+</div>
+<div id="sidebar">
+{% block sidebar %}
+{% endblock %}
+</div>
+<div id="footer">
+{% block footer %}
+<ul>
+<li>Open Radar runs on <a href="http://appengine.google.com">Google App Engine</a>.</li>
+<li>Source code hosted on <a href="http://github.com/timburks/openradar">github</a>.</li>
+</ul>
+{% endblock %}
+</div>
+</div>
+{% endblock %}
+</body>
+</html>

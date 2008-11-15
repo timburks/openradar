@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>My Radars</h1>
+{% if radars %}
+<table>
+<tr><th/><th>Status</th><th>Number</th><th>Title</th></tr>
+{% for radar in radars %}
+<tr>
+<td><a href="/myradars/edit?id={{ radar.key.id }}">Modify</a></td>
+<td>{{ radar.status }}</td>
+<td>{{ radar.number }}</td>
+<td>{{ radar.title }}</td>
+</tr>
+{% endfor %}
+</table>
+{% else %}
+You have not yet posted any Radars.
+<a href="/myradars/add">Add a Radar.</a>
+{% endif %}
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}

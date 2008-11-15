@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<h1>You are not signed in.</h1>
+<p>To {{ action }}, please <a href="{{ login_url|escape }}">sign in</a>.
+
+{% endblock %}
+

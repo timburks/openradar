@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Add A New Radar</h1>
+
+<div>
+<form action="/myradars/add" method=POST>
+<div style="float:right"><input type="submit" name="ok"/></div>
+<table>
+<tr><td>Number:</td><td><input type="text" name="number"/></td></tr>
+<tr><td>Title:</td><td><input type="text" name="title"/></td></tr>
+<tr><td>Status:</td><td><input type="text" name="status"/></td></tr>
+</table>
+<p>Description:</p>
+<textarea cols="80" rows="10" name="description">
+</textarea>
+</form>
+</div>
+
+{% endblock %}
+

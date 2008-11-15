@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{ radar.title }}</h1>
+
+<div>
+<div style="min-height:10em; padding:10px; width:40em; background:#F0F0F0; float:right">
+{{ radar.description }}
+</div>
+<table>
+<tr><td>Number:</td><td>{{ radar.number }}</td></tr>
+<tr><td>Originator:</td><td>{{ radar.user }}</td></tr>
+<tr><td>Status:</td><td>{{ radar.status }}</td></tr>
+</table>
+
+</div>
+
+{% endblock %}
+

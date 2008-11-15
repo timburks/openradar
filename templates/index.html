@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<h1>Radars</h1>
+<table>
+<tr><th>Status</th><th>Number</th><th>Originator</th><th>Title</th></tr>
+{% if radars %}
+{% for radar in radars %}
+<tr>
+<td>{{ radar.status }}</td>
+<td>{{ radar.number }}</td>
+<td>{{ radar.user }}</td>
+<td><a href="/radar?id={{ radar.key.id }}">{{ radar.title }}</a></td>
+</tr>
+{% endfor %}
+{% endif %}
+</table>
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}
