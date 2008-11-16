@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 import os, datetime, re, simplejson
+import urllib, base64
 
 import wsgiref.handlers
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.api import users
+from google.appengine.api.urlfetch import *
 
 from models import *
 from handlers import *
@@ -42,7 +44,21 @@ class RadarAddAction(Handler):
                     created=datetime.datetime.now(),
                     modified=datetime.datetime.now())
       radar.put()
-      self.redirect("/myradars")
+      # tweet this.
+      if None:
+        tweet = ("[rdar://%s] %s: %s" % (number, radar.username(), title))
+        tweet = tweet[0:140]
+        form_fields = {
+          "status": tweet
+        }
+        form_data = urllib.urlencode(form_fields)
+        password = db.GqlQuery("select * from Secret where name = :1", "twitter").fetch(1)[0].value
+        base64string = base64.encodestring('%s:%s' % ("openradar", password)) 
+        headers = {'Authorization': "Basic %s" % base64string} 
+        result = fetch("http://twitter.com/statuses/update.json", payload=form_data, method=POST, headers=headers)
+        self.respondWithText(result.content) 
+      else:
+        self.redirect("/myradars")
 
 class RadarViewAction(Handler):
   def get(self):    
@@ -154,6 +170,47 @@ class APIRadarsAction(Handler):
                  for r in radars]}
     self.respondWithDictionaryAsJSON(response)
 
+class APIAddRadarAction(Handler):
+  def post(self):
+    user = users.GetCurrentUser()
+    if (not user):
+      self.respondWithDictionaryAsJSON({"error":"you must authenticate to add radars"})
+    else:
+      number = self.request.get("number")
+      title = self.request.get("title")
+      status = self.request.get("status")
+      product = self.request.get("product")
+      classification = self.request.get("classification")
+      reproducible = int(self.request.get("reproducible"))
+      product_version = self.request.get("product_version")
+      description = self.request.get("description")
+      radar = Radar(number=number,
+		    title=title,
+                    status=status,
+                    user=user,
+                    product=product,
+                    classification=classification,
+                    reproducible=reproducible,
+                    product_version=product_version,
+                    description=description,
+                    created=datetime.datetime.now(),
+                    modified=datetime.datetime.now())
+      radar.put()
+      response = {"result":
+       		  {"title":title, 
+                    "number":number, 
+                    "status":status, 
+                    "description":description}}
+      self.respondWithDictionaryAsJSON(response)
+
+class APISecretAction(Handler):
+  def get(self):
+    name = self.request.get("name")
+    value = self.request.get("value")
+    secret = Secret(name=name, value=value)
+    secret.put()
+    self.respondWithDictionaryAsJSON({"name":name, "value":value})
+
 def main():
   application = webapp.WSGIApplication([
     ('/', IndexAction),
@@ -167,6 +224,9 @@ def main():
     ('/hello', HelloAction),
     ('/api/test', APITestAction),
     ('/api/radars', APIRadarsAction),
+    ('/api/radars/add', APIAddRadarAction),
+    # intentially disabled 
+    # ('/api/secret', APISecretAction),
     ('.*', NotFoundAction)
   ], debug=True)
   wsgiref.handlers.CGIHandler().run(application)

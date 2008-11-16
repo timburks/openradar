@@ -10,25 +10,25 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
-# Unused in query history -- copied from input.
+# Used 29 times in query history.
 - kind: Radar
   properties:
   - name: created
     direction: desc
 
-# Unused in query history -- copied from input.
+# Used once in query history.
 - kind: Radar
   properties:
   - name: creation
     direction: desc
 
-# Used 10 times in query history.
+# Used 8 times in query history.
 - kind: Radar
   properties:
   - name: number
     direction: desc
 
-# Unused in query history -- copied from input.
+# Used once in query history.
 - kind: Radar
   properties:
   - name: user
