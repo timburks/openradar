@@ -8,6 +8,7 @@ class Radar(db.Model):
   number = db.StringProperty()		# the Radar Problem ID (we need an int form of this)
   title = db.StringProperty()		 
   status = db.StringProperty()		# Radar state
+  resolved = db.StringProperty()
   user = db.UserProperty()		# App Engine user who created this entry
   product = db.StringProperty()		
   classification = db.StringProperty()
