@@ -101,7 +101,7 @@ class RadarListAction(Handler):
     if (not user):
       self.respondWithTemplate('please-sign-in.html', {'action': 'view your Radars'})
     else:
-      radars = db.GqlQuery("select * from Radar where user = :1 order by created desc", user).fetch(1000)
+      radars = db.GqlQuery("select * from Radar where user = :1 ", user).fetch(1000)
       self.respondWithTemplate('radar-list.html', {"radars": radars})
 
 class NotFoundAction(Handler):
