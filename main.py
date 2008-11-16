@@ -11,8 +11,12 @@ from handlers import *
 
 class IndexAction(Handler):
   def get(self):    
-    radars = db.GqlQuery("select * from Radar order by created desc").fetch(1000)
+    radars = db.GqlQuery("select * from Radar order by number desc").fetch(1000)
     self.respondWithTemplate('index.html', {"radars": radars})
+
+class FAQAction(Handler):
+  def get(self):    
+    self.respondWithTemplate('faq.html', {})
 
 class RadarAddAction(Handler):
   def get(self):    
@@ -127,11 +131,11 @@ class APITestAction(Handler):
 
 class APIRadarsAction(Handler):
   def get(self):
-    radars = db.GqlQuery("select * from Radar order by created desc").fetch(1000)
+    radars = db.GqlQuery("select * from Radar order by number desc").fetch(1000)
     response = {"result":
     		[{"title":r.title, 
                   "number":r.number, 
-                  "user":str(r.user), 
+                  "user":r.username(), 
                   "status":r.status, 
                   "description":r.description} 
                  for r in radars]}
@@ -140,6 +144,7 @@ class APIRadarsAction(Handler):
 def main():
   application = webapp.WSGIApplication([
     ('/', IndexAction),
+    ('/faq', FAQAction),
     ('/radar', RadarViewAction),
     ('/myradars', RadarListAction),
     ('/myradars/add', RadarAddAction),

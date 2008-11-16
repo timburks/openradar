@@ -8,4 +8,6 @@ class Radar(db.Model):
   description = db.TextProperty()
   created = db.DateTimeProperty()
   modified = db.DateTimeProperty()
+  def username(self):
+    return self.user.nickname().split("@")[0]
 
