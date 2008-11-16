@@ -45,18 +45,18 @@ class RadarAddAction(Handler):
                     modified=datetime.datetime.now())
       radar.put()
       # tweet this.
-      if None:
+      if 1:
         tweet = ("[rdar://%s] %s: %s" % (number, radar.username(), title))
         tweet = tweet[0:140]
+        secret = db.GqlQuery("select * from Secret where name = :1", "retweet").fetch(1)[0].value
         form_fields = {
-          "status": tweet
+          "message": tweet,
+          "secret": secret
         }
         form_data = urllib.urlencode(form_fields)
-        password = db.GqlQuery("select * from Secret where name = :1", "twitter").fetch(1)[0].value
-        base64string = base64.encodestring('%s:%s' % ("openradar", password)) 
-        headers = {'Authorization': "Basic %s" % base64string} 
-        result = fetch("http://twitter.com/statuses/update.json", payload=form_data, method=POST, headers=headers)
-        self.respondWithText(result.content) 
+        result = fetch("http://www.neontology.com/retweet.php", payload=form_data, method=POST)
+        #self.respondWithText(result.content) 
+        self.redirect("/myradars")
       else:
         self.redirect("/myradars")
 

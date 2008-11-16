@@ -5,4 +5,4 @@
 (task "deploy" is
   (SH "/usr/local/google_appengine/appcfg.py update ."))
 
-(task "default" => "deploy")
+(task "default" => "run")
