@@ -53,6 +53,19 @@ class RadarViewAction(Handler):
     else:
       self.respondWithTemplate('radar-view.html', {"radar":radar})
 
+class RdarViewAction(Handler):
+  def get(self):    
+    number = self.request.get("number")
+    radars = Radar.gql("WHERE number = :1", number).fetch(1)
+    if len(radars) != 1:
+      self.respondWithText('Invalid Radar id')
+      return
+    radar = radars[0]
+    if (not radar):
+      self.respondWithText('Invalid Radar id')
+    else:
+      self.respondWithTemplate('radar-view.html', {"radar":radar})
+
 class RadarEditAction(Handler):
   def get(self):    
     user = users.GetCurrentUser()
@@ -146,6 +159,7 @@ def main():
     ('/', IndexAction),
     ('/faq', FAQAction),
     ('/radar', RadarViewAction),
+    ('/rdar', RdarViewAction),
     ('/myradars', RadarListAction),
     ('/myradars/add', RadarAddAction),
     ('/myradars/edit', RadarEditAction),
