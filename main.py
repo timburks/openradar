@@ -186,21 +186,25 @@ class APITestAction(Handler):
 
 class APIRadarsAction(Handler):
   def get(self):
-    radars = db.GqlQuery("select * from Radar order by number desc").fetch(1000)
-    response = {"result":
-    		[{"title":r.title, 
-                  "number":r.number, 
-                  "user":r.username(), 
-                  "status":r.status, 
-                  "description":r.description,
-		  "resolved":r.resolved,
-		  "product":r.product,
-		  "classification":r.classification,
-		  "reproducible":r.reproducible,
-		  "product_version":r.product_version,
-		  "originated":r.originated}
-                 for r in radars]}
-    self.respondWithDictionaryAsJSON(response)
+    apiresult = memcache.get("apiresult")
+    if apiresult is None:
+      radars = db.GqlQuery("select * from Radar order by number desc").fetch(1000)
+      response = {"result":
+    		  [{"title":r.title, 
+                    "number":r.number, 
+                    "user":r.username(), 
+                    "status":r.status, 
+                    "description":r.description,
+		    "resolved":r.resolved,
+		    "product":r.product,
+		    "classification":r.classification,
+		    "reproducible":r.reproducible,
+		    "product_version":r.product_version,
+		    "originated":r.originated}
+                   for r in radars]}
+      apiresult = simplejson.dumps(response)
+      memcache.add("apiresult", apiresult, 600) # ten minutes, but we also invalidate on edits and adds
+    self.respondWithText(apiresult)
 
 class APIAddRadarAction(Handler):
   def post(self):
