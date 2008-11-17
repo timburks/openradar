@@ -53,12 +53,12 @@ class RadarAddAction(Handler):
                     status=status,
                     user=user,
                     description=description,
-		    resolved=resolved,
-		    product=product,
-		    classification=classification,
-		    reproducible=reproducible,
-		    product_version=product_version,
-		    originated=originated,
+                    resolved=resolved,
+                    product=product,
+                    classification=classification,
+                    reproducible=reproducible,
+                    product_version=product_version,
+                    originated=originated,
                     created=datetime.datetime.now(),
                     modified=datetime.datetime.now())
       radar.put()
@@ -129,12 +129,12 @@ class RadarEditAction(Handler):
         radar.number = self.request.get("number")
         radar.status = self.request.get("status")
         radar.description = self.request.get("description")
-	radar.resolved = self.request.get("resolved")
-	radar.product = self.request.get("product")
-	radar.classification = self.request.get("classification")
-	radar.reproducible = self.request.get("reproducible")
-	radar.product_version = self.request.get("product_version")
-	radar.originated = self.request.get("originated")
+        radar.resolved = self.request.get("resolved")
+        radar.product = self.request.get("product")
+        radar.classification = self.request.get("classification")
+        radar.reproducible = self.request.get("reproducible")
+        radar.product_version = self.request.get("product_version")
+        radar.originated = self.request.get("originated")
         radar.modified = datetime.datetime.now()
         radar.put()
         memcache.flush_all()
@@ -190,17 +190,17 @@ class APIRadarsAction(Handler):
     if apiresult is None:
       radars = db.GqlQuery("select * from Radar order by number desc").fetch(1000)
       response = {"result":
-    		  [{"title":r.title, 
+                  [{"title":r.title, 
                     "number":r.number, 
                     "user":r.username(), 
                     "status":r.status, 
                     "description":r.description,
-		    "resolved":r.resolved,
-		    "product":r.product,
-		    "classification":r.classification,
-		    "reproducible":r.reproducible,
-		    "product_version":r.product_version,
-		    "originated":r.originated}
+                    "resolved":r.resolved,
+                    "product":r.product,
+                    "classification":r.classification,
+                    "reproducible":r.reproducible,
+                    "product_version":r.product_version,
+                    "originated":r.originated}
                    for r in radars]}
       apiresult = simplejson.dumps(response)
       memcache.add("apiresult", apiresult, 600) # ten minutes, but we also invalidate on edits and adds
@@ -222,22 +222,22 @@ class APIAddRadarAction(Handler):
       product_version = self.request.get("product_version")
       originated = self.request.get("originated")
       radar = Radar(title=title,
-		    number=number,
+                    number=number,
                     user=user,
                     status=status,
                     description=description,
-		    resolved=resolved,
+                    resolved=resolved,
                     product=product,
                     classification=classification,
                     reproducible=reproducible,
                     product_version=product_version,
-		    originated=originated,
+                    originated=originated,
                     created=datetime.datetime.now(),
                     modified=datetime.datetime.now())
       radar.put()
       memcache.flush_all()
       response = {"result":
-       		  {"title":title, 
+                   {"title":title, 
                     "number":number, 
                     "status":status, 
                     "description":description}}
