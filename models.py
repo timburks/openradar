@@ -30,5 +30,5 @@ class Radar(db.Model):
     return self.user.nickname().split("@")[0]
 
   def put(self):
-    modified = datetime.datetime.now() 
+    self.modified = datetime.datetime.now() 
     db.Model.put(self)
