@@ -22,7 +22,7 @@ indexes:
   - name: creation
     direction: desc
 
-# Used 18 times in query history.
+# Used 28 times in query history.
 - kind: Radar
   properties:
   - name: number

@@ -32,7 +32,6 @@ class Handler(webapp.RequestHandler):
       'user': users.GetCurrentUser(),
       'login_url': users.CreateLoginURL(self.request.uri),
       'logout_url': users.CreateLogoutURL('http://' + self.request.host + '/'),
-      'application_name': 'Seen',
     }
     values.update(template_values)
     directory = os.path.dirname(__file__)

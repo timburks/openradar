@@ -1,0 +1,14 @@
+<h1>Radars</h1>
+<table>
+<tr><th>Status</th><th>Number</th><th>Originator</th><th>Title</th></tr>
+{% if radars %}
+{% for radar in radars %}
+<tr>
+<td>{{ radar.status }}</td>
+<td><a href="rdar://problem/{{ radar.number }}">{{ radar.number }}</a></td>
+<td>{{ radar.username }}</td>
+<td><a href="/radar?id={{ radar.key.id }}">{{ radar.title }}</a></td>
+</tr>
+{% endfor %}
+{% endif %}
+</table>

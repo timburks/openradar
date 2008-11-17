@@ -7,14 +7,20 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.api import users
 from google.appengine.api.urlfetch import *
+from google.appengine.api import memcache
 
 from models import *
 from handlers import *
 
 class IndexAction(Handler):
-  def get(self):    
-    radars = db.GqlQuery("select * from Radar order by number desc").fetch(1000)
-    self.respondWithTemplate('index.html', {"radars": radars})
+  def get(self):  
+    biglist = memcache.get("biglist")
+    if biglist is None:
+      radars = db.GqlQuery("select * from Radar order by number desc").fetch(1000)
+      path = os.path.join(os.path.dirname(__file__), os.path.join('templates', 'biglist.html'))
+      biglist = template.render(path, {'radars':radars})
+      memcache.add("biglist", biglist, 600) # ten minutes, but we also invalidate on edits and adds
+    self.respondWithTemplate('index.html', {"biglist": biglist})
 
 class FAQAction(Handler):
   def get(self):    
@@ -56,6 +62,7 @@ class RadarAddAction(Handler):
                     created=datetime.datetime.now(),
                     modified=datetime.datetime.now())
       radar.put()
+      memcache.flush_all()
       # tweet this.
       if 1:
         tweet = ("[rdar://%s] %s: %s" % (number, radar.username(), title))
@@ -130,6 +137,7 @@ class RadarEditAction(Handler):
 	radar.originated = self.request.get("originated")
         radar.modified = datetime.datetime.now()
         radar.put()
+        memcache.flush_all()
         self.redirect("/myradars")
         
 class RadarDeleteAction(Handler):
@@ -143,6 +151,7 @@ class RadarDeleteAction(Handler):
       self.respondWithText('Invalid Radar id')
     else:
       radar.delete()
+      memcache.flush_all()
       self.redirect("/myradars")
 
 class RadarListAction(Handler):
@@ -222,6 +231,7 @@ class APIAddRadarAction(Handler):
                     created=datetime.datetime.now(),
                     modified=datetime.datetime.now())
       radar.put()
+      memcache.flush_all()
       response = {"result":
        		  {"title":title, 
                     "number":number, 
