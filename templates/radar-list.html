@@ -10,7 +10,7 @@
 <td><a href="/myradars/edit?id={{ radar.key.id }}">Modify</a></td>
 <td>{{ radar.status }}</td>
 <td><a href="rdar://problem/{{ radar.number }}">{{ radar.number }}</a></td>
-<td>{{ radar.title }}</td>
+<td><a href="/radar?id={{ radar.key.id }}">{{ radar.title }}</a></td>
 </tr>
 {% endfor %}
 </table>

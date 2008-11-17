@@ -8,15 +8,30 @@
 <form action="/myradars/add" method=POST>
 <div style="float:right"><input type="submit" name="ok"/></div>
 <table>
-<tr><td>Number:</td><td><input type="text" name="number"/></td></tr>
-<tr><td>Title:</td><td><input type="text" name="title"/></td></tr>
-<tr><td>Status:</td><td><input type="text" name="status"/></td></tr>
+<tr><td>Number:</td><td><input type="text" name="number"/></td>
+    <td>Date Originated:</td><td><input type="text" name="originated"/></td></tr>
+<tr><td>Status:</td><td><input type="text" name="status"/></td>
+    <td>Resolved:</td><td><input type="text" name="resolved"/></td></tr>
+<tr><td>Title:</td><td colspan=3
+ style="padding-top:10px; padding-bottom:10px">
+<input type="text" size="70" name="title"/></td></tr>
+<tr><td>Product:</td><td><input type="text" name="product"/></td>
+    <td>Product Version:</td><td><input type="text" name="product_version"/></td></tr>
+<tr><td>Classification:</td><td><input type="text" name="classification"/></td>
+    <td>Reproducible:</td><td><input type="text" name="reproducible"/></td></tr>
 </table>
 <p>Description:</p>
 <textarea cols="80" rows="10" name="description">
 </textarea>
 </form>
 </div>
-
+<hr/>
+<p>
+<strong>Please note:</strong> 
+Reports posted here will not necessarily be seen by Apple.
+All problems should be submitted at bugreport.apple.com before they are posted here.
+Please only post information for Radars that you have filed yourself, and please do
+not include Apple confidential information in your posts. Thank you!
+</p>
 {% endblock %}
 

@@ -75,7 +75,7 @@ input:focus, textarea:focus {
 #page {
 	margin-left: 40px;
 	margin-right: 40px;
-	min-width: 800px;
+	min-width: 700px;
 	max-width: 1200px;
 	position: relative;
 	overflow: hidden;

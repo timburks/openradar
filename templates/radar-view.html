@@ -2,22 +2,38 @@
 
 {% block content %}
 
-<h1>{{ radar.title }}</h1>
-
+<h3>{{ radar.title }}</h3>
 <div>
 <table>
-<tr><td>Number:</td><td><a href="rdar://problem/{{ radar.number }}">{{ radar.number }}</a></td></tr>
-<tr><td>Originator:</td><td>{{ radar.username }}</td></tr>
-<tr><td>Status:</td><td>{{ radar.status }}</td></tr>
-</table>
+<tr><td>Originator:</td><td style="min-width:200px">{{ radar.username }}</td></tr>
 
+<tr><td>Number:</td><td><a href="rdar://problem/{{ radar.number }}">{{ radar.number }}</a></td>
+    <td>Date Originated:</td><td>{{ radar.originated|default_if_none:"" }}</td></tr>
+
+<tr><td>Status:</td><td>{{ radar.status|default_if_none:"" }}</td>
+    <td>Resolved:</td><td>{{ radar.resolved|default_if_none:"" }}</td></tr>
+
+<tr><td>Product:</td><td>{{ radar.product|default_if_none:"" }}</td>
+    <td>Product Version:</td><td>{{ radar.product_version|default_if_none:"" }}</td></tr>
+
+<tr><td>Classification:</td><td>{{ radar.classification|default_if_none:"" }}</td>
+    <td>Reproducible:</td><td>{{ radar.reproducible|default_if_none:"" }}</td></tr>
+
+</table>
 <div style="padding:10px; font-size:80%">
 <pre style="white-space:pre-wrap; max-width:800px"> 
 {{ radar.description|escape }}
 </pre>
 </div>
-
 </div>
+<hr/>
+<p>
+<strong>Please note:</strong> 
+Reports posted here will not necessarily be seen by Apple.
+All problems should be submitted at bugreport.apple.com before they are posted here.
+Please only post information for Radars that you have filed yourself, and please do
+not include Apple confidential information in your posts. Thank you!
+</p>
 
 {% endblock %}
 

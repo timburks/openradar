@@ -36,11 +36,23 @@ class RadarAddAction(Handler):
       number = self.request.get("number")
       status = self.request.get("status")
       description = self.request.get("description")
+      resolved = self.request.get("resolved")
+      product = self.request.get("product")
+      classification = self.request.get("classification")
+      reproducible = self.request.get("reproducible")
+      product_version = self.request.get("product_version")
+      originated = self.request.get("originated")
       radar = Radar(title=title,
                     number=number,
                     status=status,
                     user=user,
                     description=description,
+		    resolved=resolved,
+		    product=product,
+		    classification=classification,
+		    reproducible=reproducible,
+		    product_version=product_version,
+		    originated=originated,
                     created=datetime.datetime.now(),
                     modified=datetime.datetime.now())
       radar.put()
@@ -48,17 +60,16 @@ class RadarAddAction(Handler):
       if 1:
         tweet = ("[rdar://%s] %s: %s" % (number, radar.username(), title))
         tweet = tweet[0:140]
-        secret = db.GqlQuery("select * from Secret where name = :1", "retweet").fetch(1)[0].value
-        form_fields = {
-          "message": tweet,
-          "secret": secret
-        }
-        form_data = urllib.urlencode(form_fields)
-        result = fetch("http://www.neontology.com/retweet.php", payload=form_data, method=POST)
-        #self.respondWithText(result.content) 
-        self.redirect("/myradars")
-      else:
-        self.redirect("/myradars")
+        secrets = db.GqlQuery("select * from Secret where name = :1", "retweet").fetch(1)
+        if len(secrets) > 0:
+          secret = secrets[0].value
+          form_fields = {
+            "message": tweet,
+            "secret": secret
+          }
+          form_data = urllib.urlencode(form_fields)
+          result = fetch("http://www.neontology.com/retweet.php", payload=form_data, method=POST)
+      self.redirect("/myradars")
 
 class RadarViewAction(Handler):
   def get(self):    
@@ -111,6 +122,12 @@ class RadarEditAction(Handler):
         radar.number = self.request.get("number")
         radar.status = self.request.get("status")
         radar.description = self.request.get("description")
+	radar.resolved = self.request.get("resolved")
+	radar.product = self.request.get("product")
+	radar.classification = self.request.get("classification")
+	radar.reproducible = self.request.get("reproducible")
+	radar.product_version = self.request.get("product_version")
+	radar.originated = self.request.get("originated")
         radar.modified = datetime.datetime.now()
         radar.put()
         self.redirect("/myradars")
@@ -166,7 +183,13 @@ class APIRadarsAction(Handler):
                   "number":r.number, 
                   "user":r.username(), 
                   "status":r.status, 
-                  "description":r.description} 
+                  "description":r.description,
+		  "resolved":r.resolved,
+		  "product":r.product,
+		  "classification":r.classification,
+		  "reproducible":r.reproducible,
+		  "product_version":r.product_version,
+		  "originated":r.originated}
                  for r in radars]}
     self.respondWithDictionaryAsJSON(response)
 
@@ -176,23 +199,26 @@ class APIAddRadarAction(Handler):
     if (not user):
       self.respondWithDictionaryAsJSON({"error":"you must authenticate to add radars"})
     else:
-      number = self.request.get("number")
       title = self.request.get("title")
+      number = self.request.get("number")
       status = self.request.get("status")
+      description = self.request.get("description")
       product = self.request.get("product")
       classification = self.request.get("classification")
       reproducible = int(self.request.get("reproducible"))
       product_version = self.request.get("product_version")
-      description = self.request.get("description")
-      radar = Radar(number=number,
-		    title=title,
-                    status=status,
+      originated = self.request.get("originated")
+      radar = Radar(title=title,
+		    number=number,
                     user=user,
+                    status=status,
+                    description=description,
+		    resolved=resolved,
                     product=product,
                     classification=classification,
                     reproducible=reproducible,
                     product_version=product_version,
-                    description=description,
+		    originated=originated,
                     created=datetime.datetime.now(),
                     modified=datetime.datetime.now())
       radar.put()
