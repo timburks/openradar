@@ -1,11 +1,12 @@
 <div class="comment">
+  <a name="{{comment.key}}"></a>
   <h3>{{ comment.subject }}</h3>
   <div class="by">  </div>
   <div class="commentbody">
     {{ comment.body }}
   </div>
   <div class="meta">
-    By <a href="mailto:{{comment.user.email}}">{{ comment.user }}</a> at <a href="#">{{ comment.posted_at }}</a> (<a href="#">reply...</a>)
+    By <a href="mailto:{{comment.user.email}}">{{ comment.user }}</a> at <a href="#{{comment.key}}">{{ comment.posted_at }}</a> (<a href="#">reply...</a>)
   </div>
 </div>
 
