@@ -205,3 +205,37 @@ input:focus, textarea:focus {
    margin-right:0px; 
 }
 
+/* @group Comments */
+div.comments {
+	border-bottom: 1px solid #696773;
+}
+div.comment {
+	border-top: 2px solid #9a9eaf;
+	border-left: 1px solid #696773;
+	border-right: 1px solid #696773;
+}
+div.indent {
+	border-left: 4px solid #696773;
+}
+.comment > h3 {
+	font-size: 12pt;
+	padding-left: 0.5em;
+	background-color: #e8e8e8;
+}
+.comment > .by {
+	padding-left: 0.5em;
+	background-color: #dfdfdf;
+	border-bottom: 1px solid #bebacf;
+}
+.comment > .commentbody {
+	padding-left: 0.5em;
+	background-color: #dcdcdc;
+	padding-bottom: 1em;
+}
+.comment > .meta {
+	padding-left: 0.5em;
+	background-color: #dcdcdc;
+	font-size: 10pt;
+}
+/* @end */
+

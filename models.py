@@ -32,3 +32,28 @@ class Radar(db.Model):
   def put(self):
     self.modified = datetime.datetime.now() 
     db.Model.put(self)
+
+class Comment(db.Model):
+  user = db.UserProperty() # App Engine user who wrote the comment
+  subject = db.StringProperty()
+  body = db.TextProperty() # as markdown
+  posted_at = db.DateTimeProperty()
+  radar = db.ReferenceProperty(Radar)
+  is_reply_to = db.SelfReferenceProperty()
+  
+  def put(self):
+    self.posted_at = datetime.datetime.now()
+    db.Model.put(self)
+    
+  def replies(self):
+    return Comment.gql("WHERE is_reply_to = :1", self)
+  
+  # I know this is a bad place to put it, but my only other idea is custom django template tags, and I just couldn't get those to work
+  def draw(self):
+    from google.appengine.ext.webapp import template
+    import os
+    directory = os.path.dirname(__file__)
+    path = os.path.join(directory, os.path.join('templates', "comment.html"))
+    
+    return template.render(path, {"comment": self})
+    

@@ -78,16 +78,19 @@ class RadarAddAction(Handler):
           result = fetch("http://www.neontology.com/retweet.php", payload=form_data, method=POST)
       self.redirect("/myradars")
 
-class RadarViewAction(Handler):
+class RadarViewByIdAction(Handler):
   def get(self):    
     id = self.request.get("id")
     radar = Radar.get_by_id(int(id))
     if (not radar):
       self.respondWithText('Invalid Radar id')
-    else:
-      self.respondWithTemplate('radar-view.html', {"radar":radar})
+      return
+    
+    comments = Comment.gql("WHERE radar = :1", radar)
+      
+    self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": comments})
 
-class RdarViewAction(Handler):
+class RadarViewByNumberAction(Handler):
   def get(self):    
     number = self.request.get("number")
     radars = Radar.gql("WHERE number = :1", number).fetch(1)
@@ -97,8 +100,11 @@ class RdarViewAction(Handler):
     radar = radars[0]
     if (not radar):
       self.respondWithText('Invalid Radar id')
-    else:
-      self.respondWithTemplate('radar-view.html', {"radar":radar})
+      return
+    
+    comments = Comment.gql("WHERE radar = :1 AND is_reply_to = :2", radar, None)
+    
+    self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": comments})
 
 class RadarEditAction(Handler):
   def get(self):    
@@ -251,12 +257,15 @@ class APISecretAction(Handler):
     secret.put()
     self.respondWithDictionaryAsJSON({"name":name, "value":value})
 
+
+
+
 def main():
   application = webapp.WSGIApplication([
     ('/', IndexAction),
     ('/faq', FAQAction),
-    ('/radar', RadarViewAction),
-    ('/rdar', RdarViewAction),
+    ('/radar', RadarViewByIdAction),
+    ('/rdar', RadarViewByNumberAction),
     ('/myradars', RadarListAction),
     ('/myradars/add', RadarAddAction),
     ('/myradars/edit', RadarEditAction),
