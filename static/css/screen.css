@@ -225,18 +225,13 @@ div.indent {
 	font-size: 12pt;
 	padding: 0.15em;
 	padding-left: 0.5em;
+	padding-right: 0.75em;
 	font-weight:  bold;
 	background-color: #e8e1ed;
 
 }
-.comment > .by {
-	padding-left: 0.5em;
-
-}
 .comment > .commentbody {
-	padding-left: 0.5em;
 	padding: 0.5em;
-	padding-bottom: 1em;
 }
 .comment > .meta {
 	padding-left: 0.5em;
@@ -248,6 +243,11 @@ div.indent {
 .comment a:link,
 .comment a:visited {
 	color: #66b;
+}
+
+.comment input,
+.comment textarea {
+	width:  100%;
 }
 
 /* @end */

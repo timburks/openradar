@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
+{% block additionalincludes %}
+<script src="/js/comments.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+
 {% block content %}
+
 
 <h3>{{ radar.title }}</h3>
 <div>
@@ -33,8 +38,11 @@
   {% for comment in comments %}
     {{ comment.draw }}
   {% endfor %}
+  
+  <input id="newcomment" type="button" value="Add a comment" />
 </div>
 
+<br />
 
 {% endblock %}
 

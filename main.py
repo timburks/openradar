@@ -258,6 +258,40 @@ class APISecretAction(Handler):
     self.respondWithDictionaryAsJSON({"name":name, "value":value})
 
 
+class CommentsAJAXForm(Handler):
+  def get(self):
+    user = users.GetCurrentUser()
+    if (not user):
+      self.error(500)
+      self.respondWithText("You must login to post a comment")
+      return
+    
+    radarKey = self.request.get("radar")
+    radar = Radar.get(radarKey)
+    
+    if(not radar):
+      self.error(500)
+      self.respondWithText("Unknown radar key")
+      return
+      
+    args = {"radar": radar}
+    
+    commentKey = self.request.get("is_reply_to")
+    if(commentKey):
+      post = Comment.get(commentKey)
+      if(not post):
+        self.error(500)
+        self.respondWithText("Can't reply; there is no such post.")
+        return
+      args["is_reply_to"] = post
+    
+    
+    self.respondWithText(Comment(**args).form())
+    
+    
+  def post(self):
+    pass
+
 
 
 def main():
@@ -274,6 +308,7 @@ def main():
     ('/api/test', APITestAction),
     ('/api/radars', APIRadarsAction),
     ('/api/radars/add', APIAddRadarAction),
+    ('/comment', CommentsAJAXForm),
     # intentially disabled 
     # ('/api/secret', APISecretAction),
     ('.*', NotFoundAction)

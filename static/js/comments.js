@@ -1,0 +1,3 @@
+jQuery.noConflict()
+
+alert("Hej")

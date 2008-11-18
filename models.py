@@ -33,6 +33,9 @@ class Radar(db.Model):
     self.modified = datetime.datetime.now() 
     db.Model.put(self)
 
+import markdown
+md = markdown.Markdown()
+
 class Comment(db.Model):
   user = db.UserProperty() # App Engine user who wrote the comment
   subject = db.StringProperty()
@@ -56,4 +59,15 @@ class Comment(db.Model):
     path = os.path.join(directory, os.path.join('templates', "comment.html"))
     
     return template.render(path, {"comment": self})
+  
+  def form(self):
+    from google.appengine.ext.webapp import template
+    import os
+    directory = os.path.dirname(__file__)
+    path = os.path.join(directory, os.path.join('templates', "comment-form.html"))
     
+    return template.render(path, {"comment": self})
+  
+  def html_body(self):
+    return md.convert(self.body)
+
