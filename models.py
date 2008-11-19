@@ -44,10 +44,13 @@ class Comment(db.Model):
   radar = db.ReferenceProperty(Radar)
   is_reply_to = db.SelfReferenceProperty()
   
-  def put(self):
+  def __init__(self, *args, **kwargs):
+    super(Comment, self).__init__(*args, **kwargs)
     self.posted_at = datetime.datetime.now()
-    db.Model.put(self)
+    if(not self.body): self.body = ""
+    if(not self.subject): self.subject = ""
     
+      
   def replies(self):
     return Comment.gql("WHERE is_reply_to = :1", self)
   

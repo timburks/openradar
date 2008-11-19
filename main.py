@@ -259,39 +259,63 @@ class APISecretAction(Handler):
 
 
 class CommentsAJAXForm(Handler):
-  def get(self):
+  def _check(self):
     user = users.GetCurrentUser()
     if (not user):
-      self.error(500)
+      self.error(401)
       self.respondWithText("You must login to post a comment")
-      return
+      return False, False, False
     
     radarKey = self.request.get("radar")
     radar = Radar.get(radarKey)
     
     if(not radar):
-      self.error(500)
+      self.error(400)
       self.respondWithText("Unknown radar key")
-      return
+      return False, False, False
       
+    
+    replyKey = self.request.get("is_reply_to")
+    replyTo = None
+    if(replyKey):
+      replyTo = Comment.get(replyKey)
+    
+    return user, radar, replyTo
+    
+  def get(self):
+    user, radar, replyTo = self._check()
+    if(not user): return
+    
     args = {"radar": radar}
     
-    commentKey = self.request.get("is_reply_to")
-    if(commentKey):
-      post = Comment.get(commentKey)
-      if(not post):
-        self.error(500)
-        self.respondWithText("Can't reply; there is no such post.")
-        return
+    if(replyTo):
       args["is_reply_to"] = post
-    
     
     self.respondWithText(Comment(**args).form())
     
     
   def post(self):
-    pass
-
+    user, radar, replyTo = self._check()
+    if(not user): return
+    
+    commentKey = self.request.get("key")
+    comment = None
+    if(commentKey):
+      comment = Comment.get(commentKey)
+      if(not comment):
+        self.error(400)
+        self.respondWithText("Tried to edit a post that doesn't exist? Couldn't find post to edit.")
+        return
+    else:
+      comment = Comment(user = user, radar = radar)
+    
+    comment.is_reply_to = replyTo
+    comment.subject = self.request.get("subject")
+    comment.body = self.request.get("body")
+    comment.put()
+    
+    self.respondWithText(comment.draw())
+    
 
 
 def main():

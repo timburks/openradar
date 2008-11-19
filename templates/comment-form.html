@@ -1,4 +1,4 @@
-<form>
+<form onsubmit="submitComment(this); return false;">
   {% if comment.is_saved %}
   <input type="hidden" name="key", value="{{ comment.key }}" />
   {% endif %}

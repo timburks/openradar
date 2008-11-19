@@ -6,6 +6,8 @@
 
 {% block content %}
 
+<div id="error"></div>
+
 
 <h3>{{ radar.title }}</h3>
 <div>
@@ -38,11 +40,15 @@
   {% for comment in comments %}
     {{ comment.draw }}
   {% endfor %}
-  
-  <input id="newcomment" type="button" value="Add a comment" />
 </div>
+<input id="newcomment" type="button" value="Add a comment" />
 
+<div style="display:none;" id="radar">{{radar.key}}</div>
 <br />
+
+<script type="text/javascript" charset="utf-8">
+  if(jQuery("#error").text() == "") jQuery("#error").hide();
+</script>
 
 {% endblock %}
 
@@ -55,3 +61,4 @@ Please only post information for Radars that you have filed yourself, and please
 not include Apple confidential information in your posts. Thank you!
 </p>
 {% endblock %}
+

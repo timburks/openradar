@@ -205,6 +205,17 @@ a:active {
    margin-right:0px; 
 }
 
+#error {
+  padding: 1em 1em 1em 3em;
+  border: 2px solid #ff9595;
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  background: #ffd7d7 url(/images/warn_icon.gif) no-repeat 6px;
+  font-size: 1.1em;
+  cursor: pointer;
+  margin-bottom: 1em;
+}
+
 /* @group Comments */
 div.comments {
 	padding-top: 0.5em;
