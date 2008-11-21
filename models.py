@@ -32,6 +32,9 @@ class Radar(db.Model):
   def put(self):
     self.modified = datetime.datetime.now() 
     db.Model.put(self)
+    
+  def comments(self):
+    return Comment.gql("WHERE radar = :1 AND is_reply_to = :2", self, None)
 
 import markdown
 md = markdown.Markdown()
@@ -46,7 +49,7 @@ class Comment(db.Model):
   
   def __init__(self, *args, **kwargs):
     super(Comment, self).__init__(*args, **kwargs)
-    self.posted_at = datetime.datetime.now()
+    if(not self.posted_at): self.posted_at = datetime.datetime.now()
     if(not self.body): self.body = ""
     if(not self.subject): self.subject = ""
     
@@ -74,3 +77,18 @@ class Comment(db.Model):
   def html_body(self):
     return md.convert(self.body)
 
+  def editable_by_current_user(self):
+    from google.appengine.api import users
+    user = users.GetCurrentUser()
+    return user == self.user or users.is_current_user_admin()
+    
+  def deleteOrBlank(self):
+    if self.replies().count() > 0:
+      self.subject = "(Removed)"
+      self.body = "*This comment has been removed by its author or a moderator.*"
+      self.put()
+      return "blanked"
+    else:
+      self.delete()
+      return "deleted"
+  

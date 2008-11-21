@@ -10,7 +10,13 @@
       <textarea name="body" rows="10">{{ comment.body }}</textarea>
     </div>
     <div class="meta">
-      <input type="submit" value="Post message"/>
+      {% if comment.is_saved %}
+        <input type="button" value="Cancel" />
+        <input type="submit" value="Edit" />
+      {% else %}
+        <input type="button" value="Cancel" />
+        <input type="submit" value="Post message" />
+      {% endif %}
     </div>
   </div>
 </form>

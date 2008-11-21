@@ -256,7 +256,7 @@ div.indent {
 	color: #66b;
 }
 
-.comment input,
+.comment h3 input,
 .comment textarea {
 	width:  100%;
 }

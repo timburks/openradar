@@ -85,10 +85,8 @@ class RadarViewByIdAction(Handler):
     if (not radar):
       self.respondWithText('Invalid Radar id')
       return
-    
-    comments = Comment.gql("WHERE radar = :1", radar)
       
-    self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": comments})
+    self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": radar.comments()})
 
 class RadarViewByNumberAction(Handler):
   def get(self):    
@@ -102,9 +100,7 @@ class RadarViewByNumberAction(Handler):
       self.respondWithText('Invalid Radar id')
       return
     
-    comments = Comment.gql("WHERE radar = :1 AND is_reply_to = :2", radar, None)
-    
-    self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": comments})
+    self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": radar.comments()})
 
 class RadarEditAction(Handler):
   def get(self):    
@@ -258,7 +254,7 @@ class APISecretAction(Handler):
     self.respondWithDictionaryAsJSON({"name":name, "value":value})
 
 
-class CommentsAJAXForm(Handler):
+class CommentsAJAXFormAction(Handler):
   def _check(self):
     user = users.GetCurrentUser()
     if (not user):
@@ -289,7 +285,7 @@ class CommentsAJAXForm(Handler):
     args = {"radar": radar}
     
     if(replyTo):
-      args["is_reply_to"] = post
+      args["is_reply_to"] = replyTo
     
     self.respondWithText(Comment(**args).form())
     
@@ -316,7 +312,31 @@ class CommentsAJAXForm(Handler):
     
     self.respondWithText(comment.draw())
     
-
+class CommentsAJAXRemoveAction(Handler):
+  def post(self):
+    user = users.GetCurrentUser()
+    if (not user):
+      self.error(401)
+      self.respondWithText("You must login to remove a comment")
+      return
+    
+    commentKey = self.request.get("key")
+    comment = Comment.get(commentKey)
+    if(not comment):
+      self.error(400)
+      self.respondWithText("Tried to remove a post that doesn't exist? Couldn't find post to remove.")
+      return
+    
+    if(not comment.editable_by_current_user()):
+      self.error(401)
+      self.respondWithText("You must be the comment's owner, or an admin, to remove this comment.")
+      return
+    
+    if(comment.deleteOrBlank() == "blanked"):
+      self.respondWithText(comment.html_body())
+    else:
+      self.respondWithText("REMOVED")
+    
 
 def main():
   application = webapp.WSGIApplication([
@@ -332,7 +352,8 @@ def main():
     ('/api/test', APITestAction),
     ('/api/radars', APIRadarsAction),
     ('/api/radars/add', APIAddRadarAction),
-    ('/comment', CommentsAJAXForm),
+    ('/comment', CommentsAJAXFormAction),
+    ('/comment/remove', CommentsAJAXRemoveAction),
     # intentially disabled 
     # ('/api/secret', APISecretAction),
     ('.*', NotFoundAction)

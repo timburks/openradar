@@ -53,3 +53,53 @@ function submitComment(form) {
   })
   
 }
+
+function replyForm(somethingInsideTheComment) {
+  var comment = jQuery(somethingInsideTheComment).parents(".comment")
+  var parent_key = comment.children(".keyref")[0].name
+
+  jQuery.ajax({
+    url: "/comment",
+    type: "get",
+    data: {
+      radar: jQuery("#radar").text(),
+      is_reply_to: parent_key
+    },
+    success: function(commentForm) {
+      comment.parent(".commentWithReplies").children(".indent").append(commentForm).children(":last").hide().slideDown()
+    },
+    error: function(xhr, textStatus, errorThrown) {
+      showError(xhr.responseText)
+    }
+  }) 
+}
+
+function removeComment(somethingInsideTheComment) {
+  if(!confirm("Are you sure you want to remove this comment? You can't undo this."))
+    return
+  
+  var comment = jQuery(somethingInsideTheComment).parents(".comment")
+  var remove_key = comment.children(".keyref")[0].name
+  jQuery.ajax({
+    url: "/comment/remove",
+    type: "post",
+    data: {
+      radar: jQuery("#radar").text(),
+      key: remove_key
+    },
+    success: function(removalText) {
+      if(removalText.indexOf("REMOVED")==0) {
+        comment.parent(".commentWithReplies").slideUp(function() {
+          comment.parent(".commentWithReplies").remove()
+        })
+      }else {
+        comment.children("h3").text("(Removed)")
+        comment.children(".commentbody").html(removalText)
+      }
+    },
+    error: function(xhr, textStatus, errorThrown) {
+      showError(xhr.responseText)
+    }
+  }) 
+  
+}
