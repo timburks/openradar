@@ -11,11 +11,11 @@
     </div>
     <div class="meta">
       {% if comment.is_saved %}
-        <input type="button" value="Cancel" />
-        <input type="submit" value="Edit" />
+        <input type="submit" value="Edit"/>
+        <input type="button" name="cancel" value="Cancel" onclick="cancelEdit(this)"/>
       {% else %}
-        <input type="button" value="Cancel" />
         <input type="submit" value="Post message" />
+        <input type="button" value="Cancel" onclick="cancelNew(this)"/>
       {% endif %}
     </div>
   </div>

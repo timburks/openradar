@@ -279,6 +279,19 @@ class CommentsAJAXFormAction(Handler):
     return user, radar, replyTo
     
   def get(self):
+    
+    # Edit
+    commentKey = self.request.get("key")
+    if(commentKey):
+      comment = Comment.get(commentKey)
+      if(not comment):
+        self.error(400)
+        self.respondWithText("Tried to edit a post that doesn't exist? Couldn't find post to edit.")
+        return
+      self.respondWithText(comment.form())
+      return
+      
+    # New or reply
     user, radar, replyTo = self._check()
     if(not user): return
     
@@ -305,12 +318,13 @@ class CommentsAJAXFormAction(Handler):
     else:
       comment = Comment(user = user, radar = radar)
     
-    comment.is_reply_to = replyTo
-    comment.subject = self.request.get("subject")
-    comment.body = self.request.get("body")
+    if(not self.request.get("cancel")):
+      comment.is_reply_to = replyTo
+      comment.subject = self.request.get("subject")
+      comment.body = self.request.get("body")
     comment.put()
-    
-    self.respondWithText(comment.draw())
+
+    self.respondWithText(comment.draw(commentKey != ""))
     
 class CommentsAJAXRemoveAction(Handler):
   def post(self):
