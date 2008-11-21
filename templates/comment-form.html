@@ -1,0 +1,22 @@
+<form onsubmit="submitComment(this); return false;">
+  {% if comment.is_saved %}
+  <input type="hidden" name="key", value="{{ comment.key }}" />
+  {% endif %}
+  <input type="hidden" name="radar", value="{{ comment.radar.key }}" />
+  <input type="hidden" name="is_reply_to", value="{{ comment.is_reply_to.key }}" />
+  <div class="comment">
+    <h3><input name="subject" value="{{ comment.subject }}" /></h3>
+    <div class="commentbody">
+      <textarea name="body" rows="10">{{ comment.body }}</textarea>
+    </div>
+    <div class="meta">
+      {% if comment.is_saved %}
+        <input type="submit" value="Edit"/>
+        <input type="button" name="cancel" value="Cancel" onclick="cancelEdit(this)"/>
+      {% else %}
+        <input type="submit" value="Post message" />
+        <input type="button" value="Cancel" onclick="cancelNew(this)"/>
+      {% endif %}
+    </div>
+  </div>
+</form>

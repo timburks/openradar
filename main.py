@@ -53,12 +53,12 @@ class RadarAddAction(Handler):
                     status=status,
                     user=user,
                     description=description,
-		    resolved=resolved,
-		    product=product,
-		    classification=classification,
-		    reproducible=reproducible,
-		    product_version=product_version,
-		    originated=originated,
+                    resolved=resolved,
+                    product=product,
+                    classification=classification,
+                    reproducible=reproducible,
+                    product_version=product_version,
+                    originated=originated,
                     created=datetime.datetime.now(),
                     modified=datetime.datetime.now())
       radar.put()
@@ -78,16 +78,17 @@ class RadarAddAction(Handler):
           result = fetch("http://www.neontology.com/retweet.php", payload=form_data, method=POST)
       self.redirect("/myradars")
 
-class RadarViewAction(Handler):
+class RadarViewByIdAction(Handler):
   def get(self):    
     id = self.request.get("id")
     radar = Radar.get_by_id(int(id))
     if (not radar):
       self.respondWithText('Invalid Radar id')
-    else:
-      self.respondWithTemplate('radar-view.html', {"radar":radar})
+      return
+      
+    self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": radar.comments()})
 
-class RdarViewAction(Handler):
+class RadarViewByNumberAction(Handler):
   def get(self):    
     number = self.request.get("number")
     radars = Radar.gql("WHERE number = :1", number).fetch(1)
@@ -97,8 +98,9 @@ class RdarViewAction(Handler):
     radar = radars[0]
     if (not radar):
       self.respondWithText('Invalid Radar id')
-    else:
-      self.respondWithTemplate('radar-view.html', {"radar":radar})
+      return
+    
+    self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": radar.comments()})
 
 class RadarEditAction(Handler):
   def get(self):    
@@ -129,12 +131,12 @@ class RadarEditAction(Handler):
         radar.number = self.request.get("number")
         radar.status = self.request.get("status")
         radar.description = self.request.get("description")
-	radar.resolved = self.request.get("resolved")
-	radar.product = self.request.get("product")
-	radar.classification = self.request.get("classification")
-	radar.reproducible = self.request.get("reproducible")
-	radar.product_version = self.request.get("product_version")
-	radar.originated = self.request.get("originated")
+        radar.resolved = self.request.get("resolved")
+        radar.product = self.request.get("product")
+        radar.classification = self.request.get("classification")
+        radar.reproducible = self.request.get("reproducible")
+        radar.product_version = self.request.get("product_version")
+        radar.originated = self.request.get("originated")
         radar.modified = datetime.datetime.now()
         radar.put()
         memcache.flush_all()
@@ -190,17 +192,17 @@ class APIRadarsAction(Handler):
     if apiresult is None:
       radars = db.GqlQuery("select * from Radar order by number desc").fetch(1000)
       response = {"result":
-    		  [{"title":r.title, 
+                  [{"title":r.title, 
                     "number":r.number, 
                     "user":r.username(), 
                     "status":r.status, 
                     "description":r.description,
-		    "resolved":r.resolved,
-		    "product":r.product,
-		    "classification":r.classification,
-		    "reproducible":r.reproducible,
-		    "product_version":r.product_version,
-		    "originated":r.originated}
+                    "resolved":r.resolved,
+                    "product":r.product,
+                    "classification":r.classification,
+                    "reproducible":r.reproducible,
+                    "product_version":r.product_version,
+                    "originated":r.originated}
                    for r in radars]}
       apiresult = simplejson.dumps(response)
       memcache.add("apiresult", apiresult, 600) # ten minutes, but we also invalidate on edits and adds
@@ -222,22 +224,22 @@ class APIAddRadarAction(Handler):
       product_version = self.request.get("product_version")
       originated = self.request.get("originated")
       radar = Radar(title=title,
-		    number=number,
+                    number=number,
                     user=user,
                     status=status,
                     description=description,
-		    resolved=resolved,
+                    resolved=resolved,
                     product=product,
                     classification=classification,
                     reproducible=reproducible,
                     product_version=product_version,
-		    originated=originated,
+                    originated=originated,
                     created=datetime.datetime.now(),
                     modified=datetime.datetime.now())
       radar.put()
       memcache.flush_all()
       response = {"result":
-       		  {"title":title, 
+                   {"title":title, 
                     "number":number, 
                     "status":status, 
                     "description":description}}
@@ -251,12 +253,111 @@ class APISecretAction(Handler):
     secret.put()
     self.respondWithDictionaryAsJSON({"name":name, "value":value})
 
+
+class CommentsAJAXFormAction(Handler):
+  def _check(self):
+    user = users.GetCurrentUser()
+    if (not user):
+      self.error(401)
+      self.respondWithText("You must login to post a comment")
+      return False, False, False
+    
+    radarKey = self.request.get("radar")
+    radar = Radar.get(radarKey)
+    
+    if(not radar):
+      self.error(400)
+      self.respondWithText("Unknown radar key")
+      return False, False, False
+      
+    
+    replyKey = self.request.get("is_reply_to")
+    replyTo = None
+    if(replyKey):
+      replyTo = Comment.get(replyKey)
+    
+    return user, radar, replyTo
+    
+  def get(self):
+    
+    # Edit
+    commentKey = self.request.get("key")
+    if(commentKey):
+      comment = Comment.get(commentKey)
+      if(not comment):
+        self.error(400)
+        self.respondWithText("Tried to edit a post that doesn't exist? Couldn't find post to edit.")
+        return
+      self.respondWithText(comment.form())
+      return
+      
+    # New or reply
+    user, radar, replyTo = self._check()
+    if(not user): return
+    
+    args = {"radar": radar}
+    
+    if(replyTo):
+      args["is_reply_to"] = replyTo
+    
+    self.respondWithText(Comment(**args).form())
+    
+    
+  def post(self):
+    user, radar, replyTo = self._check()
+    if(not user): return
+    
+    commentKey = self.request.get("key")
+    comment = None
+    if(commentKey):
+      comment = Comment.get(commentKey)
+      if(not comment):
+        self.error(400)
+        self.respondWithText("Tried to edit a post that doesn't exist? Couldn't find post to edit.")
+        return
+    else:
+      comment = Comment(user = user, radar = radar)
+    
+    if(not self.request.get("cancel")):
+      comment.is_reply_to = replyTo
+      comment.subject = self.request.get("subject")
+      comment.body = self.request.get("body")
+    comment.put()
+
+    self.respondWithText(comment.draw(commentKey != ""))
+    
+class CommentsAJAXRemoveAction(Handler):
+  def post(self):
+    user = users.GetCurrentUser()
+    if (not user):
+      self.error(401)
+      self.respondWithText("You must login to remove a comment")
+      return
+    
+    commentKey = self.request.get("key")
+    comment = Comment.get(commentKey)
+    if(not comment):
+      self.error(400)
+      self.respondWithText("Tried to remove a post that doesn't exist? Couldn't find post to remove.")
+      return
+    
+    if(not comment.editable_by_current_user()):
+      self.error(401)
+      self.respondWithText("You must be the comment's owner, or an admin, to remove this comment.")
+      return
+    
+    if(comment.deleteOrBlank() == "blanked"):
+      self.respondWithText(comment.html_body())
+    else:
+      self.respondWithText("REMOVED")
+    
+
 def main():
   application = webapp.WSGIApplication([
     ('/', IndexAction),
     ('/faq', FAQAction),
-    ('/radar', RadarViewAction),
-    ('/rdar', RdarViewAction),
+    ('/radar', RadarViewByIdAction),
+    ('/rdar', RadarViewByNumberAction),
     ('/myradars', RadarListAction),
     ('/myradars/add', RadarAddAction),
     ('/myradars/edit', RadarEditAction),
@@ -265,6 +366,8 @@ def main():
     ('/api/test', APITestAction),
     ('/api/radars', APIRadarsAction),
     ('/api/radars/add', APIAddRadarAction),
+    ('/comment', CommentsAJAXFormAction),
+    ('/comment/remove', CommentsAJAXRemoveAction),
     # intentially disabled 
     # ('/api/secret', APISecretAction),
     ('.*', NotFoundAction)

@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 
+{% block additionalincludes %}
+<script src="/js/comments.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+
 {% block content %}
+
+<div id="error"></div>
+
 
 <h3>{{ radar.title }}</h3>
 <div>
@@ -26,7 +33,26 @@
 </pre>
 </div>
 </div>
-<hr/>
+
+
+<h2>Comments</h2>
+<div class="comments">
+  {% for comment in comments %}
+    {{ comment.draw }}
+  {% endfor %}
+</div>
+<input id="newcomment" type="button" value="Add a comment" />
+
+<div style="display:none;" id="radar">{{radar.key}}</div>
+<br />
+
+<script type="text/javascript" charset="utf-8">
+  if(jQuery("#error").text() == "") jQuery("#error").hide();
+</script>
+
+{% endblock %}
+
+{% block sidebar %}
 <p>
 <strong>Please note:</strong> 
 Reports posted here will not necessarily be seen by Apple.
@@ -34,6 +60,5 @@ All problems should be submitted at bugreport.apple.com before they are posted h
 Please only post information for Radars that you have filed yourself, and please do
 not include Apple confidential information in your posts. Thank you!
 </p>
-
 {% endblock %}
 

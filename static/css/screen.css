@@ -174,14 +174,14 @@ input:focus, textarea:focus {
 	border-top: 5px solid #202020;
 }
 
-#footer a:link,
-#footer a:visited {
+a:link,
+a:visited {
 	color: #88C;
 }
 
-#footer a:hover,
-#footer a:focus,
-#footer a:active {
+a:hover,
+a:focus,
+a:active {
 	color: #222;
 }
 
@@ -204,4 +204,62 @@ input:focus, textarea:focus {
    margin-left:0px;
    margin-right:0px; 
 }
+
+#error {
+  padding: 1em 1em 1em 3em;
+  border: 2px solid #ff9595;
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  background: #ffd7d7 url(/images/warn_icon.gif) no-repeat 6px;
+  font-size: 1.1em;
+  cursor: pointer;
+  margin-bottom: 1em;
+}
+
+/* @group Comments */
+div.comments {
+	padding-top: 0.5em;
+}
+div.comment {
+	margin-bottom: 1em;
+	background-color: #d8cedf;
+	border: 1px solid #d8cedf;
+	-webkit-border-radius: 0.5em;
+	-moz-border-radius: 0.5em;
+	-webkit-box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.25);
+}
+div.indent {
+	padding-left: 1em;
+	/*border-left: 4px solid #e1e1e1;*/
+}
+.comment > h3 {
+	font-size: 12pt;
+	padding: 0.15em;
+	padding-left: 0.5em;
+	padding-right: 0.75em;
+	font-weight:  bold;
+	background-color: #e8e1ed;
+
+}
+.comment > .commentbody {
+	padding: 0.5em;
+}
+.comment > .meta {
+	padding-left: 0.5em;
+
+	font-size: 10pt;
+	padding-bottom: 0.25em;
+}
+
+.comment a:link,
+.comment a:visited {
+	color: #66b;
+}
+
+.comment h3 input,
+.comment textarea {
+	width:  100%;
+}
+
+/* @end */
 

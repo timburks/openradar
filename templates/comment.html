@@ -1,0 +1,27 @@
+{% if not onlyInner %}
+<div class="commentWithReplies">
+{% endif %}
+  <div class="comment">
+    <a class="keyref" name="{{comment.key}}"></a>
+    <h3>{{ comment.subject }}</h3>
+    <div class="commentbody">
+      {{ comment.html_body }}
+    </div>
+    <div class="meta">
+      By <a href="mailto:{{comment.user.email}}">{{ comment.user }}</a> at
+      <a href="#{{comment.key}}">{{ comment.posted_at }}</a>
+      (<a href="#" onclick="javascript:replyForm(this); return false">reply...</a>)
+      {% if comment.editable_by_current_user %}
+        <input type="button" name="edit" value="Edit" onclick="editForm(this); return false;"/>
+        <input type="button" name="remove" value="Remove" onclick="removeComment(this); return false;"/>
+      {% endif %}
+    </div>
+  </div>
+{% if not onlyInner %}
+  <div class="indent">
+    {% for reply in comment.replies %}
+      {{ reply.draw }}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
