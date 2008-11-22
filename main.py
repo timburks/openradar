@@ -78,30 +78,42 @@ class RadarAddAction(Handler):
           result = fetch("http://www.neontology.com/retweet.php", payload=form_data, method=POST)
       self.redirect("/myradars")
 
-class RadarViewByIdAction(Handler):
+radar_pattern = re.compile("/([0-9]+)")
+
+class RadarViewByPathAction(Handler):
   def get(self):    
+    m = radar_pattern.match(self.request.path)
+    if m:
+      number = m.group(1) 
+      radars = Radar.gql("WHERE number = :1", number).fetch(1)
+      if len(radars) != 1:
+        self.respondWithText('Invalid Radar number')
+        return
+      radar = radars[0]
+      if (not radar):
+        self.respondWithText('Invalid Radar number')
+      else:
+        self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": radar.comments()})
+      return
+
+class RadarViewByIdOrNumberAction(Handler):
+  def get(self):    
+    # we keep request-by-id in case there are problems with the radar number (accidental duplicates, for example)
     id = self.request.get("id")
-    radar = Radar.get_by_id(int(id))
-    if (not radar):
-      self.respondWithText('Invalid Radar id')
+    if id:
+      radar = Radar.get_by_id(int(id))
+      if (not radar):
+        self.respondWithText('Invalid Radar id')
+      else:
+        self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": radar.comments()})
       return
-      
-    self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": radar.comments()})
-
-class RadarViewByNumberAction(Handler):
-  def get(self):    
     number = self.request.get("number")
-    radars = Radar.gql("WHERE number = :1", number).fetch(1)
-    if len(radars) != 1:
-      self.respondWithText('Invalid Radar id')
+    if number:
+      self.redirect("/"+number)
       return
-    radar = radars[0]
-    if (not radar):
-      self.respondWithText('Invalid Radar id')
-      return
+    else:
+      self.respondWithText('Please specify a Radar by number or openradar id')
     
-    self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": radar.comments()})
-
 class RadarEditAction(Handler):
   def get(self):    
     user = users.GetCurrentUser()
@@ -356,8 +368,8 @@ def main():
   application = webapp.WSGIApplication([
     ('/', IndexAction),
     ('/faq', FAQAction),
-    ('/radar', RadarViewByIdAction),
-    ('/rdar', RadarViewByNumberAction),
+    ('/radar', RadarViewByIdOrNumberAction),
+    ('/rdar', RadarViewByIdOrNumberAction),
     ('/myradars', RadarListAction),
     ('/myradars/add', RadarAddAction),
     ('/myradars/edit', RadarEditAction),
@@ -368,6 +380,7 @@ def main():
     ('/api/radars/add', APIAddRadarAction),
     ('/comment', CommentsAJAXFormAction),
     ('/comment/remove', CommentsAJAXRemoveAction),
+    ('/[0-9]+', RadarViewByPathAction),
     # intentially disabled 
     # ('/api/secret', APISecretAction),
     ('.*', NotFoundAction)

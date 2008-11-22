@@ -7,7 +7,7 @@
 <td>{{ radar.status }}</td>
 <td><a href="rdar://problem/{{ radar.number }}">{{ radar.number }}</a></td>
 <td>{{ radar.username }}</td>
-<td><a href="/radar?id={{ radar.key.id }}">{{ radar.title }}</a></td>
+<td><a href="/{{ radar.number }}">{{ radar.title }}</a></td>
 </tr>
 {% endfor %}
 {% endif %}
