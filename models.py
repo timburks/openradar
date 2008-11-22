@@ -53,6 +53,8 @@ class Comment(db.Model):
     if(not self.body): self.body = ""
     if(not self.subject): self.subject = ""
     
+  def username(self):
+    return self.user.nickname().split("@")[0]
       
   def replies(self):
     return Comment.gql("WHERE is_reply_to = :1", self)

@@ -66,6 +66,7 @@ class RadarAddAction(Handler):
       # tweet this.
       if 1:
         tweet = ("[rdar://%s] %s: %s" % (number, radar.username(), title))
+        #tweet = ("http://openradar.appspot.com/%s %s: %s" % (number, radar.username(), title))
         tweet = tweet[0:140]
         secrets = db.GqlQuery("select * from Secret where name = :1", "retweet").fetch(1)
         if len(secrets) > 0:
@@ -368,6 +369,10 @@ class CommentsAJAXRemoveAction(Handler):
     else:
       self.respondWithText("REMOVED")
     
+class CommentsRecentAction(Handler):
+  def get(self):
+    comments = db.GqlQuery("select * from Comment order by posted_at desc").fetch(20)
+    self.respondWithTemplate('comments-recent.html', {"comments": comments})
 
 def main():
   application = webapp.WSGIApplication([
@@ -385,6 +390,7 @@ def main():
     ('/api/radars/add', APIAddRadarAction),
     ('/comment', CommentsAJAXFormAction),
     ('/comment/remove', CommentsAJAXRemoveAction),
+    ('/comments', CommentsRecentAction),
     ('/refresh', RefreshAction),
     ('/[0-9]+', RadarViewByPathAction),
     # intentially disabled 

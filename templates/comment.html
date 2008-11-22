@@ -3,12 +3,14 @@
 {% endif %}
   <div class="comment">
     <a class="keyref" name="{{comment.key}}"></a>
-    <h3>{{ comment.subject }}</h3>
+    {% if comment.subject %}
+    <h3>{{ comment.subject|escape }}</h3>
+    {% endif %}
     <div class="commentbody">
       {{ comment.html_body }}
     </div>
     <div class="meta">
-      By <a href="mailto:{{comment.user.email}}">{{ comment.user }}</a> at
+      By <strong>{{ comment.username }}</strong> at
       <a href="#{{comment.key}}">{{ comment.posted_at }}</a>
       (<a href="#" onclick="javascript:replyForm(this); return false">reply...</a>)
       {% if comment.editable_by_current_user %}

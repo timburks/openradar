@@ -57,7 +57,7 @@ h4 {
 	font-size: 1.25em;
 }
 
-h1 a, h2 a, h3 a {
+h1 a, h2 a, h3 a, h4 a {
 	text-decoration: none;
 }
 
@@ -221,6 +221,8 @@ div.comments {
 	padding-top: 0.5em;
 }
 div.comment {
+        margin-top: 1em;
+	min-width: 600px;
 	margin-bottom: 1em;
 	background-color: #d8cedf;
 	border: 1px solid #d8cedf;
@@ -239,7 +241,14 @@ div.indent {
 	padding-right: 0.75em;
 	font-weight:  bold;
 	background-color: #e8e1ed;
-
+}
+.comment > h4 {
+	font-size: 10pt;
+	padding: 0.15em;
+	padding-left: 0.5em;
+	padding-right: 0.75em;
+	font-weight:  bold;
+	background-color: #d8cedf;
 }
 .comment > .commentbody {
 	padding: 0.5em;

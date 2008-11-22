@@ -10,6 +10,12 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
+# Used 31 times in query history.
+- kind: Comment
+  properties:
+  - name: posted_at
+    direction: desc
+
 # Used 29 times in query history.
 - kind: Radar
   properties:
@@ -22,7 +28,7 @@ indexes:
   - name: creation
     direction: desc
 
-# Used 33 times in query history.
+# Used 38 times in query history.
 - kind: Radar
   properties:
   - name: number

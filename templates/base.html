@@ -16,11 +16,13 @@
 {% if user %}
 <span class="item nickname">{{ user.nickname }}</span> |
 <span class="item"><a href="/">Home</a></span> |
+<span class="item"><a href="/comments">Recent Comments</a></span> |
 <span class="item"><a href="/myradars">My Radars</a></span> |
 <span class="item"><a href="/myradars/add">Add a Radar</a></span> |
 <span class="item"><a href="{{ logout_url|escape }}">Sign out</a></span>
 {% else %}
 <span class="item"><a href="/">Home</a></span> |
+<span class="item"><a href="/comments">Recent Comments</a></span> |
 <span class="item"><a href="{{ login_url|escape }}">Sign in</a></span>
 {% endif %}
 </div>
