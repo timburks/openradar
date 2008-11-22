@@ -19,7 +19,7 @@ class IndexAction(Handler):
       radars = db.GqlQuery("select * from Radar order by number desc").fetch(1000)
       path = os.path.join(os.path.dirname(__file__), os.path.join('templates', 'biglist.html'))
       biglist = template.render(path, {'radars':radars})
-      memcache.add("biglist", biglist, 600) # ten minutes, but we also invalidate on edits and adds
+      memcache.add("biglist", biglist, 3600) # one hour, but we also invalidate on edits and adds
     self.respondWithTemplate('index.html', {"biglist": biglist})
 
 class FAQAction(Handler):
@@ -183,6 +183,11 @@ class NotFoundAction(Handler):
     self.response.out.write("<pre>")
     self.response.out.write(self.request)
     self.response.out.write("</pre>")
+
+class RefreshAction(Handler):
+  def get(self):
+    memcache.flush_all()
+    self.redirect("/")
 
 class HelloAction(Handler):
   def get(self):
@@ -380,6 +385,7 @@ def main():
     ('/api/radars/add', APIAddRadarAction),
     ('/comment', CommentsAJAXFormAction),
     ('/comment/remove', CommentsAJAXRemoveAction),
+    ('/refresh', RefreshAction),
     ('/[0-9]+', RadarViewByPathAction),
     # intentially disabled 
     # ('/api/secret', APISecretAction),
