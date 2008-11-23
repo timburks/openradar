@@ -4,12 +4,12 @@
 <h1>My Radars</h1>
 {% if radars %}
 <table>
-<tr><th/><th>Status</th><th>Number</th><th>Title</th></tr>
+<tr><th/><th>Number</th><th>Status</th><th>Title</th></tr>
 {% for radar in radars %}
 <tr>
 <td><a href="/myradars/edit?id={{ radar.key.id }}">Modify</a></td>
+<td><a href="rdar://problem/{{ radar.number }}">rdar</a>://<a href="/radar?id={{ radar.key.id }}">{{ radar.number }}</a></td>
 <td>{{ radar.status }}</td>
-<td><a href="rdar://problem/{{ radar.number }}">{{ radar.number }}</a></td>
 <td><a href="/radar?id={{ radar.key.id }}">{{ radar.title }}</a></td>
 </tr>
 {% endfor %}

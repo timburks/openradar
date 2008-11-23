@@ -177,12 +177,14 @@ input:focus, textarea:focus {
 a:link,
 a:visited {
 	color: #88C;
+	text-decoration: none;
 }
 
 a:hover,
 a:focus,
 a:active {
 	color: #222;
+	text-decoration: none;
 }
 
 #footer ul {
@@ -263,6 +265,14 @@ div.indent {
 .comment a:link,
 .comment a:visited {
 	color: #66b;
+	text-decoration: none;
+}
+
+.comment a:hover,
+.comment a:focus,
+.comment a:active {
+	color: #222;
+	text-decoration: none;
 }
 
 .comment h3 input,

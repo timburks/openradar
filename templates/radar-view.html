@@ -13,7 +13,7 @@
 <table>
 <tr><td>Originator:</td><td style="min-width:200px">{{ radar.username }}</td></tr>
 
-<tr><td>Number:</td><td><a href="rdar://problem/{{ radar.number }}">{{ radar.number }}</a></td>
+<tr><td>Number:</td><td><a href="rdar://problem/{{ radar.number }}">rdar</a>://<a href="/{{radar.number}}">{{ radar.number }}</a></td>
     <td>Date Originated:</td><td>{{ radar.originated|default_if_none:"" }}</td></tr>
 
 <tr><td>Status:</td><td>{{ radar.status|default_if_none:"" }}</td>

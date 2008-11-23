@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Recent Comments</h1>
+{% if comments %}
+{% for comment in comments %}
+<div class="commentWithReplies">
+  <div class="comment">
+    <a class="keyref" name="{{comment.key}}"></a>
+    <h4><a href="/{{ comment.radar.number }}#{{ comment.key }}">Open Radar {{ comment.radar.number }}: {{ comment.radar.title }}</a></h4>
+    {% if comment.subject %}
+    <h3>{{ comment.subject|escape }}</h3>
+    {% endif %}
+    <div class="commentbody">
+      {{ comment.html_body }}
+    </div>
+    <div class="meta">
+      By <strong>{{ comment.username }}</strong> at <a href="/{{ comment.radar.number }}#{{ comment.key }}">{{ comment.posted_at }}</a>
+    </div>
+  </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}

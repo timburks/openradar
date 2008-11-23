@@ -88,11 +88,11 @@ class RadarViewByPathAction(Handler):
       number = m.group(1) 
       radars = Radar.gql("WHERE number = :1", number).fetch(1)
       if len(radars) != 1:
-        self.respondWithText('Invalid Radar number')
+        self.respondWithTemplate('radar-missing.html', {"number":number})
         return
       radar = radars[0]
       if (not radar):
-        self.respondWithText('Invalid Radar number')
+        self.respondWithTemplate('radar-missing.html', {"number":number})
       else:
         self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": radar.comments()})
       return
