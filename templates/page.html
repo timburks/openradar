@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block searchbox %}
+<div style="clear:right; float:right">
+<form action="/search" method="get">
+<input name="query"></input>
+<input type="submit" value="Search"/>
+</form>
+</div>
+{% endblock %}
+
+{% block content %}
+<h1>
+{% if showprev %}
+<a href="/page/{{ showprev }}">back</a>
+{% endif %}
+Page {{ pagenumber }}
+{% if shownext %}
+<a href="/page/{{ shownext }}">next</a>
+{% endif %}
+</h1>
+
+{{ biglist }}
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}

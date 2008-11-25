@@ -1,11 +1,12 @@
 from google.appengine.ext import db
+from google.appengine.ext import search
 import datetime
 
 class Secret(db.Model):
   name = db.StringProperty()
   value = db.StringProperty()
 
-class Radar(db.Model):
+class Radar(search.SearchableModel):
   # This first set of properties are user-specified. 
   # For flexibility and robustness, we represent them all as strings.
   number = db.StringProperty()		# the Radar Problem ID (we need an int form of this)
@@ -39,7 +40,7 @@ class Radar(db.Model):
 import markdown
 md = markdown.Markdown()
 
-class Comment(db.Model):
+class Comment(search.SearchableModel):
   user = db.UserProperty() # App Engine user who wrote the comment
   subject = db.StringProperty()
   body = db.TextProperty() # as markdown

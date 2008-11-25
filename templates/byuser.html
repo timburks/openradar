@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-<h1>Radars</h1>
 
 {% block content %}
-{{ biglist }}
+<h1>Radars posted by {{ username }}</h1>
+{{ radarlist }}
 {% endblock %}
 
 {% block sidebar %}

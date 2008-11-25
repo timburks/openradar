@@ -8,19 +8,51 @@ from google.appengine.ext.webapp import template
 from google.appengine.api import users
 from google.appengine.api.urlfetch import *
 from google.appengine.api import memcache
+from google.appengine.api import *
 
 from models import *
 from handlers import *
 
 class IndexAction(Handler):
-  def get(self):  
+  def get(self):
+    self.redirect("/page/1")
+    
+class OldIndexAction(Handler):
+  def get(self):      
     biglist = memcache.get("biglist")
     if biglist is None:
-      radars = db.GqlQuery("select * from Radar order by number desc").fetch(1000)
+      radars = db.GqlQuery("select * from Radar order by number desc").fetch(100)
       path = os.path.join(os.path.dirname(__file__), os.path.join('templates', 'biglist.html'))
       biglist = template.render(path, {'radars':radars})
       memcache.add("biglist", biglist, 3600) # one hour, but we also invalidate on edits and adds
     self.respondWithTemplate('index.html', {"biglist": biglist})
+
+PAGESIZE = 40
+PAGE_PATTERN = re.compile("/page/([0-9]+)")
+
+class RadarListByPageAction(Handler):
+  def get(self):  
+    m = PAGE_PATTERN.match(self.request.path)
+    if m:
+      number = m.group(1) 
+      if (int(number) > 1):
+        showprev = int(number)-1
+      else: 
+        showprev = None
+      shownext = int(number)+1
+      pagename = "page" + number
+      biglist = memcache.get(pagename)
+      if biglist is None:
+        radars = db.GqlQuery("select * from Radar order by number desc").fetch(PAGESIZE,(int(number)-1)*PAGESIZE)
+        if len(radars) > 0:
+          path = os.path.join(os.path.dirname(__file__), os.path.join('templates', 'biglist.html'))
+          biglist = template.render(path, {'radars':radars})
+          memcache.add(pagename, biglist, 3600) # one hour, but we also invalidate on edits and adds
+        else:
+          biglist = "<p>That's all.</p>"
+      self.respondWithTemplate('page.html', {'pagenumber':number, 'shownext':shownext, 'showprev':showprev, "biglist": biglist})
+    else:
+      self.respondWithText('invalid page request')
 
 class FAQAction(Handler):
   def get(self):    
@@ -65,8 +97,8 @@ class RadarAddAction(Handler):
       memcache.flush_all()
       # tweet this.
       if 1:
-        tweet = ("[rdar://%s] %s: %s" % (number, radar.username(), title))
-        #tweet = ("http://openradar.appspot.com/%s %s: %s" % (number, radar.username(), title))
+        #tweet = ("[rdar://%s] %s: %s" % (number, radar.username(), title))
+        tweet = ("http://openradar.me/%s %s: %s" % (number, radar.username(), title))
         tweet = tweet[0:140]
         secrets = db.GqlQuery("select * from Secret where name = :1", "retweet").fetch(1)
         if len(secrets) > 0:
@@ -79,11 +111,11 @@ class RadarAddAction(Handler):
           result = fetch("http://www.neontology.com/retweet.php", payload=form_data, method=POST)
       self.redirect("/myradars")
 
-radar_pattern = re.compile("/([0-9]+)")
+RADAR_PATTERN = re.compile("/([0-9]+)")
 
 class RadarViewByPathAction(Handler):
   def get(self):    
-    m = radar_pattern.match(self.request.path)
+    m = RADAR_PATTERN.match(self.request.path)
     if m:
       number = m.group(1) 
       radars = Radar.gql("WHERE number = :1", number).fetch(1)
@@ -206,13 +238,19 @@ class APITestAction(Handler):
 
 class APIRadarsAction(Handler):
   def get(self):
+    page = self.request.get("page")
+    if page:
+      page = int(page)
+    else:
+      page = 1
     apiresult = memcache.get("apiresult")
     if apiresult is None:
-      radars = db.GqlQuery("select * from Radar order by number desc").fetch(1000)
+      radars = db.GqlQuery("select * from Radar order by number desc").fetch(100,(page-1)*100)
       response = {"result":
-                  [{"title":r.title, 
+                  [{"id":r.key().id(),
+                    "title":r.title, 
                     "number":r.number, 
-                    "user":r.username(), 
+                    "user":r.user.email(),
                     "status":r.status, 
                     "description":r.description,
                     "resolved":r.resolved,
@@ -223,9 +261,30 @@ class APIRadarsAction(Handler):
                     "originated":r.originated}
                    for r in radars]}
       apiresult = simplejson.dumps(response)
-      memcache.add("apiresult", apiresult, 600) # ten minutes, but we also invalidate on edits and adds
+      #memcache.add("apiresult", apiresult, 600) # ten minutes, but we also invalidate on edits and adds
     self.respondWithText(apiresult)
 
+class APICommentsAction(Handler):
+  def get(self):
+    page = self.request.get("page")
+    if page:
+      page = int(page)
+    else:
+      page = 1
+    comments = db.GqlQuery("select * from Comment order by posted_at desc").fetch(100,(page-1)*100)
+    response = {"result":
+                [{"id":c.key().id(),
+                  "user":c.user.email(), 
+                  "subject":c.subject,
+                  "body":c.body,
+                  "radar":c.radar.number,
+                  "is_reply_to":c.is_reply_to and c.is_reply_to.key().id() or ""}
+                 for c in comments]}
+    apiresult = simplejson.dumps(response)
+    self.respondWithText(apiresult)
+    
+    
+        
 class APIAddRadarAction(Handler):
   def post(self):
     user = users.GetCurrentUser()
@@ -374,6 +433,52 @@ class CommentsRecentAction(Handler):
     comments = db.GqlQuery("select * from Comment order by posted_at desc").fetch(20)
     self.respondWithTemplate('comments-recent.html', {"comments": comments})
 
+class RadarsByUserAction(Handler):
+  def get(self):
+    username = self.request.get("user")
+    user = users.User(username)
+    if user:
+      query = db.GqlQuery("select * from Radar where user = :1", user)
+      radars = query.fetch(100)
+      if len(radars) == 0:
+        searchlist = '<p>No matching results found.</p>'
+      else:
+        path = os.path.join(os.path.dirname(__file__), os.path.join('templates', 'biglist.html'))
+        searchlist = template.render(path, {'radars':radars})
+      self.respondWithTemplate('byuser.html', {"radarlist": searchlist})
+    else:
+      self.respondWithText('unknown user')
+
+class SearchAction(Handler):
+  def get(self):
+    querystring = self.request.get("query")
+    keywords = querystring.split(" ")
+    keyword = keywords[0]
+    try:
+      query = Radar.all().search(keyword).order("-number")
+      radars = query.fetch(100)
+    except Exception:
+      self.respondWithTemplate('search.html', {"query":keyword, "searchlist":"<p>No matching results found.</p>"})
+      return
+    if len(radars) == 0:
+      searchlist = '<p>No matching results found.</p>'
+    else:
+      path = os.path.join(os.path.dirname(__file__), os.path.join('templates', 'biglist.html'))
+      searchlist = template.render(path, {'radars':radars})
+    self.respondWithTemplate('search.html', {"query":keyword, "searchlist": searchlist})
+
+class RePutAction(Handler):
+  def get(self):
+    offset = self.request.get("offset")
+    if offset:
+      offset = int(offset)
+    else:
+      offset = 0
+    radars = Radar.all().fetch(50,offset)
+    for radar in radars:
+      radar.put()
+    self.respondWithText("done")
+
 def main():
   application = webapp.WSGIApplication([
     ('/', IndexAction),
@@ -387,14 +492,19 @@ def main():
     ('/hello', HelloAction),
     ('/api/test', APITestAction),
     ('/api/radars', APIRadarsAction),
+    ('/api/comments', APICommentsAction),
     ('/api/radars/add', APIAddRadarAction),
     ('/comment', CommentsAJAXFormAction),
     ('/comment/remove', CommentsAJAXRemoveAction),
     ('/comments', CommentsRecentAction),
     ('/refresh', RefreshAction),
+    ('/search', SearchAction),
+    ('/radarsby', RadarsByUserAction),
+    ('/page/[0-9]+', RadarListByPageAction),
     ('/[0-9]+', RadarViewByPathAction),
     # intentially disabled 
     # ('/api/secret', APISecretAction),
+    # ('/reput', RePutAction),
     ('.*', NotFoundAction)
   ], debug=True)
   wsgiref.handlers.CGIHandler().run(application)
