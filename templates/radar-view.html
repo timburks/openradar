@@ -4,11 +4,11 @@
 <script src="/js/comments.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
 
+
+{% block title %}rdar://{{ radar.number }}: {{ radar.title|escape }}{% endblock %}
+
 {% block content %}
-
-
-
-<h3>{{ radar.title }}</h3>
+<h3>{{ radar.title|escape }}</h3>
 <div>
 <table>
 <tr><td>Originator:</td><td style="min-width:200px">{{ radar.username }}</td></tr>
@@ -50,6 +50,7 @@
   if(jQuery("#error").text() == "") jQuery("#error").hide();
 </script>
 
+{% if not bare %}
 <p style="margin-top:4em; border-top:solid thin">
 <strong>Please note:</strong> 
 Reports posted here will not necessarily be seen by Apple.
@@ -57,7 +58,10 @@ All problems should be submitted at bugreport.apple.com before they are posted h
 Please only post information for Radars that you have filed yourself, and please do
 not include Apple confidential information in your posts. Thank you!
 </p>
+{% endif %}
+
 {% endblock %}
+
 
 {% block sidebar %}
 {% endblock %}

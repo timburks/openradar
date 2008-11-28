@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}Open Radar FAQ{% endblock %}
+
 
 {% block content %}
 <h1>FAQ</h1>
@@ -14,11 +16,7 @@
  
 	<p>It is basic but enough to get us started. All source code is on github, and I am completely open to suggestion about this. If you think it is valuable, please start using it and we'll add whatever missing features we need.</p>
 
-	<p>Also, to make it easy to get data out of this, there's an api that  you can use to get a <span class="caps">JSON</span> dump of the entire store:</p>
-
-	<p><a href="http://openradar.appspot.com/api/radars">http://openradar.appspot.com/api/radars</a></p>
-
-	<p>That will be good until we get up to 1000 radars, at that point, we'll start hitting App Engine query limits and will have to support paginated queries.</p>
+	<p>Also, to make it easy to get data out of this, there's an api that  you can use to get a <span class="caps">JSON</span> dump of the entire store. For details, see the source on github.</p>
 
 	<p>If you have comments or ideas, please add them to the <a href="http://github.com/timburks/openradar/wikis/home">openradar wiki on github.</a></p>
 

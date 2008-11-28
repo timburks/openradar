@@ -117,6 +117,7 @@ class RadarViewByPathAction(Handler):
   def get(self):    
     m = RADAR_PATTERN.match(self.request.path)
     if m:
+      bare = self.request.get("bare")
       number = m.group(1) 
       radars = Radar.gql("WHERE number = :1", number).fetch(1)
       if len(radars) != 1:
@@ -126,7 +127,7 @@ class RadarViewByPathAction(Handler):
       if (not radar):
         self.respondWithTemplate('radar-missing.html', {"number":number})
       else:
-        self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": radar.comments()})
+        self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": radar.comments(), "bare":bare})
       return
 
 class RadarViewByIdOrNumberAction(Handler):
@@ -283,7 +284,19 @@ class APICommentsAction(Handler):
     apiresult = simplejson.dumps(response)
     self.respondWithText(apiresult)
     
-    
+class APIRadarsNumbersAction(Handler):
+  def get(self):
+    page = self.request.get("page")
+    if page:
+      page = int(page)
+    else:
+      page = 1
+    apiresult = memcache.get("apiresult")
+    if apiresult is None:
+      radars = db.GqlQuery("select * from Radar order by number desc").fetch(100,(page-1)*100)
+      response = {"result":[r.number for r in radars]}
+      apiresult = simplejson.dumps(response)
+    self.respondWithText(apiresult)
         
 class APIAddRadarAction(Handler):
   def post(self):
@@ -493,6 +506,7 @@ def main():
     ('/api/test', APITestAction),
     ('/api/radars', APIRadarsAction),
     ('/api/comments', APICommentsAction),
+    ('/api/radars/numbers', APIRadarsNumbersAction),
     ('/api/radars/add', APIAddRadarAction),
     ('/comment', CommentsAJAXFormAction),
     ('/comment/remove', CommentsAJAXRemoveAction),

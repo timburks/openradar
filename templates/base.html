@@ -12,6 +12,7 @@
 <div id="page">
 <div id="header">
 {% block header %}
+{% if not bare %}
 <div id="login">
 <div style="float:right">
 {% if user %}
@@ -35,6 +36,7 @@
 </div>
 <h1><a href="/">Open Radar</a></h1>
 <h2>Community bug reports</h2>
+{% endif %}
 {% endblock %}
 </div>
 <div id="content">
@@ -47,12 +49,14 @@
 </div>
 <div id="footer">
 {% block footer %}
+{% if not bare %}
 <ul>
 <li>Running on <a href="http://appengine.google.com">Google App Engine</a>.</li>
 <li>Source code on <a href="http://github.com/timburks/openradar">github</a>.</li>
 <li>Answers to <a href="/faq">Frequently Asked Questions.</a></li>
 <li>On <a href="http://twitter.com/openradar">Twitter.</a></li>
 </ul>
+{% endif %}
 {% endblock %}
 </div>
 </div>

@@ -16,7 +16,7 @@ indexes:
   - name: posted_at
     direction: desc
 
-# Used 7 times in query history.
+# Unused in query history -- copied from input.
 - kind: Radar
   properties:
   - name: __searchable_text_index
@@ -35,7 +35,7 @@ indexes:
   - name: creation
     direction: desc
 
-# Used 3 times in query history.
+# Used 5 times in query history.
 - kind: Radar
   properties:
   - name: number
