@@ -115,6 +115,7 @@ RADAR_PATTERN = re.compile("/([0-9]+)")
 
 class RadarViewByPathAction(Handler):
   def get(self):    
+    user = users.GetCurrentUser()
     m = RADAR_PATTERN.match(self.request.path)
     if m:
       bare = self.request.get("bare")
@@ -127,11 +128,12 @@ class RadarViewByPathAction(Handler):
       if (not radar):
         self.respondWithTemplate('radar-missing.html', {"number":number})
       else:
-        self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": radar.comments(), "bare":bare})
+        self.respondWithTemplate('radar-view.html', {"mine":(user == radar.user), "radar":radar, "comments": radar.comments(), "bare":bare})
       return
 
 class RadarViewByIdOrNumberAction(Handler):
   def get(self):    
+    user = users.GetCurrentUser()
     # we keep request-by-id in case there are problems with the radar number (accidental duplicates, for example)
     id = self.request.get("id")
     if id:
@@ -139,7 +141,7 @@ class RadarViewByIdOrNumberAction(Handler):
       if (not radar):
         self.respondWithText('Invalid Radar id')
       else:
-        self.respondWithTemplate('radar-view.html', {"radar":radar, "comments": radar.comments()})
+        self.respondWithTemplate('radar-view.html', {"mine":(user == radar.user), "radar":radar, "comments": radar.comments()})
       return
     number = self.request.get("number")
     if number:
@@ -208,7 +210,7 @@ class RadarListAction(Handler):
     if (not user):
       self.respondWithTemplate('please-sign-in.html', {'action': 'view your Radars'})
     else:
-      radars = db.GqlQuery("select * from Radar where user = :1 ", user).fetch(1000)
+      radars = db.GqlQuery("select * from Radar where user = :1 order by number desc", user).fetch(1000)
       self.respondWithTemplate('radar-list.html', {"radars": radars})
 
 class NotFoundAction(Handler):
@@ -451,7 +453,7 @@ class RadarsByUserAction(Handler):
     username = self.request.get("user")
     user = users.User(username)
     if user:
-      query = db.GqlQuery("select * from Radar where user = :1", user)
+      query = db.GqlQuery("select * from Radar where user = :1 order by number desc", user)
       radars = query.fetch(100)
       if len(radars) == 0:
         searchlist = '<p>No matching results found.</p>'

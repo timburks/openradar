@@ -35,7 +35,7 @@ indexes:
   - name: creation
     direction: desc
 
-# Used 5 times in query history.
+# Used 8 times in query history.
 - kind: Radar
   properties:
   - name: number
@@ -46,4 +46,11 @@ indexes:
   properties:
   - name: user
   - name: created
+    direction: desc
+
+# Used once in query history.
+- kind: Radar
+  properties:
+  - name: user
+  - name: number
     direction: desc

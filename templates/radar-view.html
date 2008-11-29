@@ -11,7 +11,13 @@
 <h3>{{ radar.title|escape }}</h3>
 <div>
 <table>
-<tr><td>Originator:</td><td style="min-width:200px">{{ radar.username }}</td></tr>
+<tr><td>Originator:</td><td style="min-width:200px">{{ radar.username }}</td>
+{% if mine %}	
+<td><a href="/myradars/edit?id={{ radar.key.id }}">Modify My Radar</a></td>
+{% else %}
+<td></td>
+{% endif %}
+</tr>
 
 <tr><td>Number:</td><td><a href="rdar://problem/{{ radar.number }}">rdar</a>://<a href="/{{radar.number}}">{{ radar.number }}</a></td>
     <td>Date Originated:</td><td>{{ radar.originated|default_if_none:"" }}</td></tr>
