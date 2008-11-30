@@ -21,8 +21,8 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 }
 
 body {
-	background-color: #f3fcf3;
-	color: #313233;
+	background-color: #ffffff;
+	color: #101010;
 	font-size: 14px;
 	line-height: 1.3;
 	font-family: Helvetica;
@@ -176,7 +176,7 @@ input:focus, textarea:focus {
 
 a:link,
 a:visited {
-	color: #88C;
+	color: #448;
 	text-decoration: none;
 }
 
@@ -264,7 +264,7 @@ div.indent {
 
 .comment a:link,
 .comment a:visited {
-	color: #66b;
+	color: #448;
 	text-decoration: none;
 }
 
