@@ -95,3 +95,14 @@ class Comment(search.SearchableModel):
       self.delete()
       return "deleted"
   
+class Profile(db.Model):
+  name = db.StringProperty()            # screen name
+  twitter = db.StringProperty()         # twitter id
+  user = db.UserProperty()
+  radar_count = db.IntegerProperty()
+  
+class Bump(db.Model):
+  radar = db.ReferenceProperty(Radar)   # users can bump radars to raise their profile
+  user = db.UserProperty()              # the bumping user
+  created = db.DateTimeProperty()	      # when the bump was added
+
