@@ -10,9 +10,9 @@
 {% for radar in radars %}
 <tr>
 <td><a href="/myradars/edit?id={{ radar.key.id }}">Modify</a></td>
-<td><a href="rdar://problem/{{ radar.number }}">rdar</a>://<a href="/radar?id={{ radar.key.id }}">{{ radar.number }}</a></td>
-<td>{{ radar.status }}</td>
-<td><a href="/radar?id={{ radar.key.id }}">{{ radar.title }}</a></td>
+<td><a href="rdar://problem/{{ radar.number|escape }}">rdar</a>://<a href="/radar?id={{ radar.key.id }}">{{ radar.number|escape }}</a></td>
+<td>{{ radar.status|escape }}</td>
+<td><a href="/radar?id={{ radar.key.id }}">{{ radar.title|escape }}</a></td>
 </tr>
 {% endfor %}
 </table>
