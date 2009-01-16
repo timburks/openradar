@@ -57,6 +57,18 @@ class Comment(search.SearchableModel):
   def username(self):
     return self.user.nickname().split("@")[0]
       
+  def radar_exists(self):
+    try:
+      return self.radar != None 
+    except db.Error:
+      return False
+
+  def radarnumber(self):
+    return self.radar_exists() and self.radar.number or "Deleted"
+
+  def radartitle(self):
+    return self.radar_exists() and self.radar.title or "Deleted"
+
   def replies(self):
     return Comment.gql("WHERE is_reply_to = :1", self)
   
