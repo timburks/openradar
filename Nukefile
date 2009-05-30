@@ -9,7 +9,7 @@
 
 (task "backup" is
       (SH "mkdir -pv backup")
-      (1 upTo:10 do:
+      (1 upTo:15 do:
          (do (i)
              (SH "curl http://openradar.appspot.com/api/radars?page=#{i} > backup/radars#{i}.json")))
       (1 upTo:3 do:

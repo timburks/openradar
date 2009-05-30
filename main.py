@@ -108,7 +108,10 @@ class RadarAddAction(Handler):
             "secret": secret
           }
           form_data = urllib.urlencode(form_fields)
-          result = fetch("http://www.neontology.com/retweet.php", payload=form_data, method=POST)
+          try:
+            result = fetch("http://www.neontology.com/retweet.php", payload=form_data, method=POST)
+          except Exception:
+            None # let's not worry about downstream problems
       self.redirect("/myradars")
 
 RADAR_PATTERN = re.compile("/([0-9]+)")
