@@ -109,7 +109,7 @@ class RadarAddAction(Handler):
           }
           form_data = urllib.urlencode(form_fields)
           try:
-            result = fetch("http://www.neontology.com/retweet.php", payload=form_data, method=POST)
+            result = fetch("http://sulfur.neontology.com/retweet.php", payload=form_data, method=POST)
           except Exception:
             None # let's not worry about downstream problems
       self.redirect("/myradars")
@@ -497,9 +497,14 @@ class RePutAction(Handler):
       radar.put()
     self.respondWithText("done")
 
+class LoginAction(webapp.RequestHandler):
+  def get(self):
+    self.response.out.write(users.create_login_url("/"))
+
 def main():
   application = webapp.WSGIApplication([
     ('/', IndexAction),
+    ('/loginurl', LoginAction),
     ('/faq', FAQAction),
     ('/radar', RadarViewByIdOrNumberAction),
     ('/rdar', RadarViewByIdOrNumberAction),
