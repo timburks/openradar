@@ -22,7 +22,21 @@ class Radar(handlers.Handler):
     def post(self):
         pass
         
-
+class Search(handlers.Handler):
+    def get(self):
+        result = {}
+        radars = None
+        searchQuery = self.request.get("query")
+        keywords = searchQuery.split(" ")
+        keyword = keywords[0]
+        try:
+            radars = models.Radar.all().search(keyword).order("-number").fetch(100)
+        except Exception:
+            radars = None
+        if radars and len(radars) > 0:
+            result = [radar.toDictionary() for radar in radars]
+        self.respondWithDictionaryAsJSON({"result": result})
+        
 class Test(handlers.Handler):
     def get(self):
         result = {"foo":[1, 2, 3, {"bar": [4, 5, 6]}]}
