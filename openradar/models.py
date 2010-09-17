@@ -122,6 +122,16 @@ class Comment(search.SearchableModel):
       self.delete()
       return "deleted"
     
+  def toDictionary(self):
+    return {
+      "id":self.key().id(),
+      "user":self.user.email(), 
+      "subject":self.subject,
+      "body":self.body,
+      "radar":self.radar.number,
+      "is_reply_to":self.is_reply_to and self.is_reply_to.key().id() or ""
+    }
+    
 
 class Profile(db.Model):
   name = db.StringProperty()            # screen name
