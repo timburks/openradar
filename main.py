@@ -501,6 +501,7 @@ def main():
   application = webapp.WSGIApplication([
     ('/', IndexAction),
     ('/[0-9]+', RadarViewByPathAction),
+    ('/api/comment', openradar.api.Comment),
     ('/api/comments', APICommentsAction),
     ('/api/radar', openradar.api.Radar),
     ('/api/radars', APIRadarsAction),

@@ -4,6 +4,29 @@ import db
 import handlers
 import models
 
+class Comment(handlers.Handler):
+    def get(self):
+        result = {}
+        count = self.request.get("count")
+        if count:
+            count = int(count)
+        else:
+            count = 100
+        page = self.request.get("page")
+        if page:
+            page = int(page)
+        else:
+            page = 1
+        user = google.appengine.api.users.User(self.request.get("user"))
+        if user:
+            comments = db.Comment().fetchByUser(user, page, count)
+            if comments:
+                result = [comment.toDictionary() for comment in comments]
+        self.respondWithDictionaryAsJSON({"result": result})
+        
+    def post(self):
+        pass
+
 class Radar(handlers.Handler):
     def get(self):
         result = {}
