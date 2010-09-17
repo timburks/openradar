@@ -1,3 +1,4 @@
+import google.appengine.api.users
 import simplejson
 import db
 import handlers
@@ -6,6 +7,16 @@ import models
 class Radar(handlers.Handler):
     def get(self):
         result = {}
+        count = self.request.get("count")
+        if count:
+            count = int(count)
+        else:
+            count = 100
+        page = self.request.get("page")
+        if page:
+            page = int(page)
+        else:
+            page = 1
         radarId = self.request.get("id")
         if radarId:
             radar = db.Radar().fetchById(radarId)
@@ -17,6 +28,12 @@ class Radar(handlers.Handler):
                 radar = db.Radar().fetchByNumber(radarNumber)
                 if (radar):
                     result = radar.toDictionary()
+        if not result:
+            user = google.appengine.api.users.User(self.request.get("user"))
+            if user:
+                radars = db.Radar().fetchByUser(user, page, count)
+                if radars:
+                    result = [radar.toDictionary() for radar in radars]
         self.respondWithDictionaryAsJSON({"result": result})
         
     def post(self):
