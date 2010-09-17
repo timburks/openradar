@@ -238,11 +238,6 @@ class HelloAction(Handler):
     else:
       print "Hello, %s!" % user.nickname()
 
-class APITestAction(Handler):
-  def get(self):
-    response = {"foo":[1,2,3,{"bar":[4,5,6]}]}
-    self.respondWithDictionaryAsJSON(response)
-
 class APIRadarsAction(Handler):
   def get(self):
     page = self.request.get("page")
@@ -512,7 +507,7 @@ def main():
     ('/api/radars/add', APIAddRadarAction),
     ('/api/radars/numbers', APIRadarsNumbersAction),
     ('/api/search', openradar.api.Search),
-    ('/api/test', APITestAction),
+    ('/api/test', openradar.api.Test),
     ('/comment', CommentsAJAXFormAction),
     ('/comment/remove', CommentsAJAXRemoveAction),
     ('/comments', CommentsRecentAction),
