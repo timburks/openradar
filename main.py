@@ -10,6 +10,7 @@ from google.appengine.api.urlfetch import *
 from google.appengine.api import memcache
 from google.appengine.api import *
 
+import openradar.api
 from openradar.models import *
 from openradar.handlers import *
 
@@ -504,28 +505,29 @@ class LoginAction(webapp.RequestHandler):
 def main():
   application = webapp.WSGIApplication([
     ('/', IndexAction),
-    ('/loginurl', LoginAction),
+    ('/[0-9]+', RadarViewByPathAction),
+    ('/api/comments', APICommentsAction),
+    ('/api/radars', APIRadarsAction),
+    ('/api/radars/add', APIAddRadarAction),
+    ('/api/radars/numbers', APIRadarsNumbersAction),
+    ('/api/search', openradar.api.Search),
+    ('/api/test', APITestAction),
+    ('/comment', CommentsAJAXFormAction),
+    ('/comment/remove', CommentsAJAXRemoveAction),
+    ('/comments', CommentsRecentAction),
     ('/faq', FAQAction),
-    ('/radar', RadarViewByIdOrNumberAction),
-    ('/rdar', RadarViewByIdOrNumberAction),
+    ('/hello', HelloAction),
+    ('/loginurl', LoginAction),
     ('/myradars', RadarListAction),
     ('/myradars/add', RadarAddAction),
     ('/myradars/edit', RadarEditAction),
     ('/myradars/delete', RadarDeleteAction),
-    ('/hello', HelloAction),
-    ('/api/test', APITestAction),
-    ('/api/radars', APIRadarsAction),
-    ('/api/comments', APICommentsAction),
-    ('/api/radars/numbers', APIRadarsNumbersAction),
-    ('/api/radars/add', APIAddRadarAction),
-    ('/comment', CommentsAJAXFormAction),
-    ('/comment/remove', CommentsAJAXRemoveAction),
-    ('/comments', CommentsRecentAction),
+    ('/page/[0-9]+', RadarListByPageAction),
+    ('/radar', RadarViewByIdOrNumberAction),
+    ('/radarsby', RadarsByUserAction),
+    ('/rdar', RadarViewByIdOrNumberAction),
     ('/refresh', RefreshAction),
     ('/search', SearchAction),
-    ('/radarsby', RadarsByUserAction),
-    ('/page/[0-9]+', RadarListByPageAction),
-    ('/[0-9]+', RadarViewByPathAction),
     # intentially disabled 
     # ('/api/secret', APISecretAction),
     # ('/reput', RePutAction),
