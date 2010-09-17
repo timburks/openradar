@@ -36,6 +36,21 @@ class Radar(search.SearchableModel):
     
   def comments(self):
     return Comment.gql("WHERE radar = :1 AND is_reply_to = :2", self, None)
+    
+  def toDictionary(self):
+    return {
+      "id":self.key().id(),
+      "title":self.title, 
+      "number":self.number,
+      "user":self.user.email(),
+      "status":self.status,
+      "description":self.description,
+      "resolved":self.resolved,
+      "product":self.product,
+      "classification":self.classification,
+      "reproducible":self.reproducible,
+      "product_version":self.product_version,
+      "originated":self.originated}
 
 import markdown
 md = markdown.Markdown()

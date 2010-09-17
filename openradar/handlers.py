@@ -5,7 +5,6 @@ from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import login_required
 
 
-from models import *
 import datetime
 import os
 import simplejson
@@ -34,7 +33,7 @@ class Handler(webapp.RequestHandler):
       'logout_url': users.CreateLogoutURL('http://' + self.request.host + '/'),
     }
     values.update(template_values)
-    directory = os.path.dirname(__file__)
+    directory = os.path.join(os.path.dirname(__file__), '..')
     path = os.path.join(directory, os.path.join('templates', template_name))
     self.response.out.write(template.render(path, values))
     

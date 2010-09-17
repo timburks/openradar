@@ -10,8 +10,8 @@ from google.appengine.api.urlfetch import *
 from google.appengine.api import memcache
 from google.appengine.api import *
 
-from models import *
-from handlers import *
+from openradar.models import *
+from openradar.handlers import *
 
 class IndexAction(Handler):
   def get(self):
