@@ -53,8 +53,8 @@ class Search(handlers.Handler):
             page = int(page)
         else:
             page = 1
-        searchQuery = self.request.get("query")
-        keywords = searchQuery.split(" ")
+        searchQuery = self.request.get("q")
+        keywords = searchQuery.split("+")
         keyword = keywords[0]
         try:
             radars = models.Radar.all().search(keyword).order("-number").fetch(count, (page - 1) * count)
