@@ -1,2 +1,2 @@
-__all__ = ["handlers", "models"]
+__all__ = ["db", "handlers", "models"]
 
