@@ -92,7 +92,7 @@ class Comment(search.SearchableModel):
     from google.appengine.ext.webapp import template
     import os
     directory = os.path.dirname(__file__)
-    path = os.path.join(directory, os.path.join('templates', "comment.html"))
+    path = os.path.join(directory, os.path.join('../templates', "comment.html"))
     
     return template.render(path, {"comment": self, "onlyInner": onlyInner})
   
@@ -100,7 +100,7 @@ class Comment(search.SearchableModel):
     from google.appengine.ext.webapp import template
     import os
     directory = os.path.dirname(__file__)
-    path = os.path.join(directory, os.path.join('templates', "comment-form.html"))
+    path = os.path.join(directory, os.path.join('../templates', "comment-form.html"))
     
     return template.render(path, {"comment": self})
   
@@ -121,7 +121,8 @@ class Comment(search.SearchableModel):
     else:
       self.delete()
       return "deleted"
-  
+    
+
 class Profile(db.Model):
   name = db.StringProperty()            # screen name
   twitter = db.StringProperty()         # twitter id
