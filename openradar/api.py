@@ -26,11 +26,21 @@ class Search(handlers.Handler):
     def get(self):
         result = {}
         radars = None
+        count = self.request.get("count")
+        if count:
+            count = int(count)
+        else:
+            count = 100
+        page = self.request.get("page")
+        if page:
+            page = int(page)
+        else:
+            page = 1
         searchQuery = self.request.get("query")
         keywords = searchQuery.split(" ")
         keyword = keywords[0]
         try:
-            radars = models.Radar.all().search(keyword).order("-number").fetch(100)
+            radars = models.Radar.all().search(keyword).order("-number").fetch(count, (page - 1) * count)
         except Exception:
             radars = None
         if radars and len(radars) > 0:
