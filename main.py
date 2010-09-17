@@ -507,6 +507,7 @@ def main():
     ('/', IndexAction),
     ('/[0-9]+', RadarViewByPathAction),
     ('/api/comments', APICommentsAction),
+    ('/api/radar', openradar.api.Radar),
     ('/api/radars', APIRadarsAction),
     ('/api/radars/add', APIAddRadarAction),
     ('/api/radars/numbers', APIRadarsNumbersAction),
