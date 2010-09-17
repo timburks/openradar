@@ -52,11 +52,17 @@ class Radar(handlers.Handler):
                 if (radar):
                     result = radar.toDictionary()
         if not result:
-            user = google.appengine.api.users.User(self.request.get("user"))
-            if user:
-                radars = db.Radar().fetchByUser(user, page, count)
-                if radars:
-                    result = [radar.toDictionary() for radar in radars]
+            userName = self.request.get("user")
+            if userName:
+                user = google.appengine.api.users.User(userName)
+                if user:
+                    radars = db.Radar().fetchByUser(user, page, count)
+                    if radars:
+                        result = [radar.toDictionary() for radar in radars]
+        if not result:
+            radars = db.Radar().fetchAll(page, count)
+            if radars:
+                result = [radar.toDictionary() for radar in radars]
         self.respondWithDictionaryAsJSON({"result": result})
         
     def post(self):
