@@ -40,26 +40,30 @@ class Radar(handlers.Handler):
             page = int(page)
         else:
             page = 1
+        parameters = [];
         radarId = self.request.get("id")
         if radarId:
-            radar = db.Radar().fetchById(radarId)
+            parameters.append(radarId)
+            radar = db.Radar().fetchById(int(radarId))
             if (radar):
                 result = radar.toDictionary()
         if not result:
             radarNumber = self.request.get("number")
             if radarNumber:
+                parameters.append(radarNumber)
                 radar = db.Radar().fetchByNumber(radarNumber)
                 if (radar):
                     result = radar.toDictionary()
         if not result:
             userName = self.request.get("user")
             if userName:
+                parameters.append(userName)
                 user = google.appengine.api.users.User(userName)
                 if user:
                     radars = db.Radar().fetchByUser(user, page, count)
                     if radars:
                         result = [radar.toDictionary() for radar in radars]
-        if not result:
+        if not result and not parameters:
             radars = db.Radar().fetchAll(page, count)
             if radars:
                 result = [radar.toDictionary() for radar in radars]
