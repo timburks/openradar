@@ -5,7 +5,7 @@ class Radar():
         return models.Radar.gql("ORDER BY number DESC").fetch(count, (page - 1) * count)
         
     def fetchById(self, id):
-        return models.Radar.gql("WHERE id = :1", id).get()
+        return models.Radar.get_by_id(id)
         
     def fetchByNumber(self, number):
         return models.Radar.gql("WHERE number = :1", number).get()
