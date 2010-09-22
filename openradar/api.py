@@ -98,7 +98,17 @@ class Search(handlers.Handler):
         keyword = keywords[0]
         
         try:
-            radars = models.Radar.all().search(keyword).order("-number").fetch(count, (page - 1) * count)
+            if scope == "number":
+                radars = db.Radar().fetchByNumbers(keywords, page, count)
+            elif scope == "user":
+                users = []
+                for userName in keywords:
+                    user = google.appengine.api.users.User(userName)
+                    if user:
+                        users.append(user)
+                radars = db.Radar().fetchByUsers(users, page, count);
+            else:
+                radars = models.Radar.all().search(keyword).order("-number").fetch(count, (page - 1) * count)
         except Exception:
             radars = None
         if radars and len(radars) > 0:
