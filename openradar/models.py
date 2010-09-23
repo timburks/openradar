@@ -9,8 +9,11 @@ class Secret(db.Model):
 class Radar(search.SearchableModel):
   # This first set of properties are user-specified. 
   # For flexibility and robustness, we represent them all as strings.
-  number = db.StringProperty()		# the Radar Problem ID (we need an int form of this)
-  title = db.StringProperty()		 
+  # The Radar Problem ID (we need an int form of this)
+  number = db.StringProperty()
+  # The radar number this radar duplicates
+  parent_number = db.StringProperty()
+  title = db.StringProperty()
   status = db.StringProperty()		# Radar state
   resolved = db.StringProperty()
   user = db.UserProperty()		# App Engine user who created this entry
@@ -31,11 +34,17 @@ class Radar(search.SearchableModel):
     return self.user.nickname().split("@")[0]
 
   def put(self):
-    self.modified = datetime.datetime.now() 
+    self.modified = datetime.datetime.now()
     db.Model.put(self)
     
   def comments(self):
     return Comment.gql("WHERE radar = :1 AND is_reply_to = :2", self, None)
+    
+  def children(self):
+    return Radar.gql("WHERE parent_number = :1 ORDER BY number ASC", self.number)
+    
+  def parent(self):
+    return Radar.gql("WHERE number = :1", self.parent_number).get()
     
   def toDictionary(self):
     return {
