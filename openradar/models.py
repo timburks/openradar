@@ -35,6 +35,8 @@ class Radar(search.SearchableModel):
 
   def put(self):
     self.modified = datetime.datetime.now()
+    # Sanitize the data before storing
+    self.sanitize()
     db.Model.put(self)
     
   def comments(self):
@@ -45,6 +47,38 @@ class Radar(search.SearchableModel):
     
   def parent(self):
     return Radar.gql("WHERE number = :1", self.parent_number).get()
+    
+  def sanitize(self):
+      self.classification = self.classification.strip()
+      self.description = self.description.strip()
+      self.number = self.number.strip()
+      self.originated = self.originated.strip()
+      self.product = self.product.strip()
+      self.product_version = self.product_version.strip()
+      self.resolved = self.resolved.strip()
+      self.reproducible = self.reproducible.strip()
+      
+      # The most common format for duplicates is "Duplicate/<radar_number>"
+      # If that format is found, extract the included radar number and store 
+      # it in self.parent_number
+      current_status = self.status.strip()
+      status_words = current_status.split("/")
+      if len(status_words) == 2:
+          # Trim any leading or trailing whitespace from the status type
+          status_type = status_words[0].strip()
+          # Determine whether status_type equals "duplicate", ignore case
+          # sensitivity
+          if status_type.lower() == "duplicate":
+              status_type = "Duplicate"
+              parent_radar_number = status_words[1].strip()
+              if parent_radar_number.isdigit():
+                  self.parent_number = parent_radar_number
+              # Put the components back together
+              current_status = status_type + "/" + parent_radar_number
+      # Update self.status with the sanitized status
+      self.status = current_status;
+      
+      self.title = self.title.strip()
     
   def toDictionary(self):
     return {
