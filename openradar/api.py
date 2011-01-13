@@ -76,8 +76,46 @@ class Radar(handlers.Handler):
         self.respondWithDictionaryAsJSON({"result": result})
         
     def post(self):
-        pass
+        result = {}
         
+        currentUser = google.appengine.api.users.GetCurrentUser()
+        if (not currentUser):
+            # Unauthorized
+            self.error(401)
+            self.respondWithDictionaryAsJSON({"error": "Authentication required."})
+            return
+        
+        radar = models.Radar(
+            created = datetime.datetime.now(),
+            modified = datetime.datetime.now())
+        
+        # Required
+        radar.number = self.request.get("number", None)
+        if (radar.number == None):
+            # Bad Request
+            self.error(400)
+            self.respondWithDictionaryAsJSON({"error": "Missing required parameter."})
+            return;
+        
+        # Optional
+        radar.classification = self.request.get("classification", None)
+        radar.description = self.request.get("description", None)
+        radar.originated = self.request.get("originated", None)
+        radar.product = self.request.get("product", None)
+        radar.product_version = self.request.get("product_version", None)
+        # radar.resolved = self.request.get("resolved", None)
+        radar.reproducible = self.request.get("reproducible", None)
+        radar.status = self.request.get("status", None)
+        radar.title = self.request.get("title", None)
+        
+        # Save
+        radar.put()
+        
+        if (radar.key() != None):
+            result = radar.toDictionary();
+        
+        # Return the result
+        self.respondWithDictionaryAsJSON({"result": result})
         
 class Search(handlers.Handler):
     def get(self):
