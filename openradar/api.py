@@ -1,3 +1,7 @@
+"""@package docstring
+Provides the web service API.
+"""
+
 import google.appengine.api.memcache
 import google.appengine.api.users
 import datetime
@@ -7,7 +11,25 @@ import handlers
 import models
 
 class Comment(handlers.Handler):
+    """Provides web service methods that allow interaction with comment 
+    information.
+    
+    More details.
+    """
+    
     def get(self):
+        """Returns one or more comments.
+        
+        Parameters:
+        
+        count (optional): The number of results to return. Default is 100.
+        page (optional): The page of results. Default is 1.
+        user (optional): The email address of the radar submitter.
+        
+        Errors:
+        
+        400 Bad Request
+        """
         result = {}
         count = self.request.get("count")
         if (count):
@@ -32,7 +54,25 @@ class Comment(handlers.Handler):
         pass
 
 class Radar(handlers.Handler):
+    """Provides web service methods that allow interaction with radar 
+    information.
+    """
+    
     def get(self):
+        """Returns one or more radars.
+        
+        Parameters:
+        
+        count (optional): The number of results to return. Default is 100.
+        page (optional): The page of results. Default is 1.
+        id (optional): The radar identifier.
+        number (optional): The radar number.
+        user (optional): The email address of the radar submitter.
+        
+        Errors:
+        
+        400 Bad Request
+        """
         result = {}
         count = self.request.get("count", None)
         if (count):
@@ -76,6 +116,29 @@ class Radar(handlers.Handler):
         self.respondWithDictionaryAsJSON({"result": result})
         
     def post(self):
+        """Add a radar.
+        
+        Parameters:
+        
+        number (required):
+        classification (optional):
+        description (optional):
+        originated (optional):
+        product (optional):
+        product_version (optional):
+        reproducible (optional):
+        status (optional):
+        title (optional):
+        
+        Errors:
+        
+        400 Bad Request
+        401 Unauthorized
+        
+        Authentication:
+        
+        This service requires authentication.
+        """
         result = {}
         
         currentUser = google.appengine.api.users.GetCurrentUser()
@@ -118,6 +181,8 @@ class Radar(handlers.Handler):
         self.respondWithDictionaryAsJSON({"result": result})
         
 class Search(handlers.Handler):
+    """Provides web service methods that enable search."""
+    
     def get(self):
         result = {}
         radars = None
