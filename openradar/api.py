@@ -159,6 +159,7 @@ class Radar(handlers.Handler):
             self.error(400)
             self.respondWithDictionaryAsJSON({"error": "Missing required parameter."})
             return;
+        radar.user = currentUser;
         
         # Optional
         radar.classification = self.request.get("classification", None)
