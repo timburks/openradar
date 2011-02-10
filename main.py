@@ -504,6 +504,7 @@ def main():
     ('/api/comment', openradar.api.Comment),
     ('/api/comments', APICommentsAction),
     ('/api/radar', openradar.api.Radar),
+    ('/api/radar/count', openradar.api.RadarCount),
     ('/api/radars', APIRadarsAction),
     ('/api/radars/add', APIAddRadarAction),
     ('/api/radars/numbers', APIRadarsNumbersAction),

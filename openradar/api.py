@@ -52,7 +52,7 @@ class Comment(handlers.Handler):
         
     def post(self):
         pass
-
+        
 class Radar(handlers.Handler):
     """Provides web service methods that allow interaction with radar 
     information.
@@ -177,6 +177,23 @@ class Radar(handlers.Handler):
         if (radar.key() != None):
             result = radar.toDictionary();
         
+        # Return the result
+        self.respondWithDictionaryAsJSON({"result": result})
+        
+class RadarCount(handlers.Handler):
+    """Provides web service methods that allow interaction with radar count 
+    information."""
+    
+    def get(self):
+        """Returns a count of radars.
+        
+        Parameters:
+        
+        Errors:
+        
+        400 Bad Request
+        """
+        result = db.Radar().fetchCount()
         # Return the result
         self.respondWithDictionaryAsJSON({"result": result})
         
