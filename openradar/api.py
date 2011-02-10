@@ -178,6 +178,8 @@ class Radar(handlers.Handler):
         if (radar.key() != None):
             result = radar.toDictionary();
         
+        google.appengine.api.memcache.flush_all()
+        
         # Return the result
         self.respondWithDictionaryAsJSON({"result": result})
         
