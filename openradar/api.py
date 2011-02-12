@@ -11,11 +11,7 @@ import handlers
 import models
 
 class Comment(handlers.Handler):
-    """Provides web service methods that allow interaction with comment 
-    information.
-    
-    More details.
-    """
+    """Provides web service methods that handle requests to /api/comment."""
     
     def get(self):
         """Returns one or more comments.
@@ -24,7 +20,7 @@ class Comment(handlers.Handler):
         
         count (optional): The number of results to return. Default is 100.
         page (optional): The page of results. Default is 1.
-        user (optional): The email address of the radar submitter.
+        user (optional): The email address of the comment submitter.
         
         Errors:
         
@@ -54,9 +50,7 @@ class Comment(handlers.Handler):
         pass
         
 class Radar(handlers.Handler):
-    """Provides web service methods that allow interaction with radar 
-    information.
-    """
+    """Provides web service methods that handle requests to /api/radar."""
     
     def get(self):
         """Returns one or more radars.
@@ -184,11 +178,10 @@ class Radar(handlers.Handler):
         self.respondWithDictionaryAsJSON({"result": result})
         
 class RadarCount(handlers.Handler):
-    """Provides web service methods that allow interaction with radar count 
-    information."""
+    """Provides web service methods that handle requests to api/radar/count."""
     
     def get(self):
-        """Returns a count of radars.
+        """Returns the number of radars.
         
         Parameters:
         
@@ -201,7 +194,7 @@ class RadarCount(handlers.Handler):
         self.respondWithDictionaryAsJSON({"result": result})
         
 class Search(handlers.Handler):
-    """Provides web service methods that enable search."""
+    """Provides web service methods that handle requests to api/search."""
     
     def get(self):
         result = {}
