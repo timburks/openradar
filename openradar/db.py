@@ -26,6 +26,9 @@ class Comment():
     def fetchAll(self, page = 1, count = 100):
         return models.Comment.gql("ORDER BY posted_at DESC").fetch(count, (page - 1) * count)
         
+    def fetchCount(self):
+        return models.Comment.all().count()
+        
     def fetchByUser(self, user, page = 1, count = 100):
         return models.Comment.gql("WHERE user = :1 ORDER BY posted_at DESC", user).fetch(count, (page - 1) * count)
         
