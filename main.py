@@ -502,6 +502,7 @@ def main():
     ('/', IndexAction),
     ('/[0-9]+', RadarViewByPathAction),
     ('/api/comment', openradar.api.Comment),
+    ('/api/comment/count', openradar.api.CommentCount),
     ('/api/comments', APICommentsAction),
     ('/api/radar', openradar.api.Radar),
     ('/api/radar/count', openradar.api.RadarCount),

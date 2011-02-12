@@ -49,6 +49,22 @@ class Comment(handlers.Handler):
     def post(self):
         pass
         
+class CommentCount(handlers.Handler):
+    """Provides web service methods that handle requests to api/comment/count."""
+    
+    def get(self):
+        """Returns the number of comments.
+        
+        Parameters:
+        
+        Errors:
+        
+        400 Bad Request
+        """
+        result = db.Comment().fetchCount()
+        # Return the result
+        self.respondWithDictionaryAsJSON({"result": result})
+        
 class Radar(handlers.Handler):
     """Provides web service methods that handle requests to /api/radar."""
     
