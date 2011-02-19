@@ -51,7 +51,9 @@ class Radar(search.SearchableModel):
         return Comment.gql("WHERE radar = :1 AND is_reply_to = :2", self, None)
     
     def children(self):
-        return Radar.gql("WHERE parent_number = :1 ORDER BY number ASC", self.number)
+        gqlQuery = Radar.gql("WHERE parent_number = :1 ORDER BY number ASC", self.number)
+        
+        return gqlQuery.fetch(gqlQuery.count())
     
     def parent(self):
         return Radar.gql("WHERE number = :1", self.parent_number).get()

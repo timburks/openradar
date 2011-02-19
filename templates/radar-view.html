@@ -40,6 +40,14 @@
 
 <div id="error"></div>
 
+{% if radars %}
+<h2>Duplicates</h2>
+<div class="duplicates">
+    {% include "biglist.html" %}
+</div>
+<br />
+{% endif %}
+
 <h2>Comments</h2>
 <div class="comments">
   {% for comment in comments %}

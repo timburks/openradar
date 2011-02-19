@@ -11,6 +11,7 @@ from google.appengine.api import memcache
 from google.appengine.api import *
 
 import openradar.api
+import openradar.db
 from openradar.models import *
 from openradar.handlers import *
 
@@ -132,11 +133,11 @@ class RadarViewByPathAction(Handler):
       if (not radar):
         self.respondWithTemplate('radar-missing.html', {"number":number})
       else:
-        self.respondWithTemplate('radar-view.html', {"mine":(user == radar.user), "radar":radar, "comments": radar.comments(), "bare":bare})
+        self.respondWithTemplate('radar-view.html', {"mine":(user == radar.user), "radar":radar, "radars":radar.children(), "comments": radar.comments(), "bare":bare})
       return
 
 class RadarViewByIdOrNumberAction(Handler):
-  def get(self):    
+  def get(self):
     user = users.GetCurrentUser()
     # we keep request-by-id in case there are problems with the radar number (accidental duplicates, for example)
     id = self.request.get("id")
@@ -145,7 +146,7 @@ class RadarViewByIdOrNumberAction(Handler):
       if (not radar):
         self.respondWithText('Invalid Radar id')
       else:
-        self.respondWithTemplate('radar-view.html', {"mine":(user == radar.user), "radar":radar, "comments": radar.comments()})
+        self.respondWithTemplate('radar-view.html', {"mine":(user == radar.user), "radar":radar, "radars":radar.children(), "comments": radar.comments()})
       return
     number = self.request.get("number")
     if number:

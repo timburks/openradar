@@ -1,16 +1,20 @@
 <table>
-<tr><th>Number</th><th>Status</th><th>Originator</th><th>Product</th><th>Title</th></tr>
+    <tr>
+        <th>Number</th>
+        <th>Status</th>
+        <th>Originator</th>
+        <th>Product</th>
+        <th>Title</th>
+    </tr>
 {% if radars %}
 {% for radar in radars %}
-<tr>
-<td>
-<a href="rdar://problem/{{ radar.number|escape }}">rdar</a>://<a href="/{{ radar.number|escape }}">{{ radar.number|escape }}</a>
-</td>
-<td>{{ radar.status|escape }}</td>
-<td>{{ radar.username|escape }}</td>
-<td>{{ radar.product|escape }}</td>
-<td><a href="/{{ radar.number }}">{{ radar.title|escape }}</a></td>
-</tr>
+    <tr>
+        <td><a href="rdar://problem/{{ radar.number|escape }}">rdar</a>://<a href="/{{ radar.number|escape }}">{{ radar.number|escape }}</a></td>
+        <td>{{ radar.status|escape }}</td>
+        <td>{{ radar.username|escape }}</td>
+        <td>{{ radar.product|escape }}</td>
+        <td><a href="/{{ radar.number }}">{{ radar.title|escape }}</a></td>
+    </tr>
 {% endfor %}
 {% endif %}
 </table>
