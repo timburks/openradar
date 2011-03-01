@@ -10,45 +10,55 @@ indexes:
 # automatically uploaded to the admin console when you next deploy
 # your application using appcfg.py.
 
-# Used once in query history.
 - kind: Comment
   properties:
   - name: posted_at
     direction: desc
 
-# Unused in query history -- copied from input.
+- kind: Comment
+  properties:
+  - name: user
+  - name: number
+    direction: desc
+
+- kind: Comment
+  properties:
+  - name: user
+  - name: posted_at
+    direction: desc
+
 - kind: Radar
   properties:
   - name: __searchable_text_index
   - name: number
     direction: desc
 
-# Unused in query history -- copied from input.
 - kind: Radar
   properties:
   - name: created
     direction: desc
 
-# Unused in query history -- copied from input.
 - kind: Radar
   properties:
   - name: creation
     direction: desc
 
-# Used 11 times in query history.
 - kind: Radar
   properties:
   - name: number
     direction: desc
 
-# Unused in query history -- copied from input.
+- kind: Radar
+  properties:
+  - name: parent_number
+  - name: number
+
 - kind: Radar
   properties:
   - name: user
   - name: created
     direction: desc
 
-# Used once in query history.
 - kind: Radar
   properties:
   - name: user
