@@ -23,7 +23,7 @@ class OldIndexAction(Handler):
   def get(self):      
     biglist = memcache.get("biglist")
     if biglist is None:
-      radars = db.GqlQuery("select * from Radar order by number desc").fetch(100)
+      radars = db.GqlQuery("select * from Radar order by number_intvalue desc").fetch(100)
       path = os.path.join(os.path.dirname(__file__), os.path.join('templates', 'biglist.html'))
       biglist = template.render(path, {'radars':radars})
       memcache.add("biglist", biglist, 3600) # one hour, but we also invalidate on edits and adds
@@ -45,7 +45,7 @@ class RadarListByPageAction(Handler):
       pagename = "page" + number
       biglist = memcache.get(pagename)
       if biglist is None:
-        radars = db.GqlQuery("select * from Radar order by number desc").fetch(PAGESIZE,(int(number)-1)*PAGESIZE)
+        radars = db.GqlQuery("select * from Radar order by number_intvalue desc").fetch(PAGESIZE,(int(number)-1)*PAGESIZE)
         if len(radars) > 0:
           path = os.path.join(os.path.dirname(__file__), os.path.join('templates', 'biglist.html'))
           biglist = template.render(path, {'radars':radars})
@@ -84,6 +84,7 @@ class RadarAddAction(Handler):
       originated = self.request.get("originated")
       radar = Radar(title=title,
                     number=number,
+                    number_intvalue=int(number),
                     status=status,
                     user=user,
                     description=description,
@@ -182,6 +183,7 @@ class RadarEditAction(Handler):
       else:
         radar.title = self.request.get("title")
         radar.number = self.request.get("number")
+        radar.number_intvalue = int(self.request.get("number"))
         radar.status = self.request.get("status")
         radar.description = self.request.get("description")
         radar.resolved = self.request.get("resolved")
@@ -194,7 +196,19 @@ class RadarEditAction(Handler):
         radar.put()
         memcache.flush_all()
         self.redirect("/myradars")
-        
+  
+class RadarFixNumberAction(Handler): 
+  def post(self):
+    id = self.request.get("id")
+    radar = Radar.get_by_id(int(id))
+    if not radar:
+      self.respondWithText('Invalid Radar id')
+    else:
+      radar.number_intvalue = int(radar.number)      
+      radar.put()
+      memcache.flush_all()
+      self.respondWithText('OK')
+     
 class RadarDeleteAction(Handler):
   def get(self):
     user = users.GetCurrentUser()
@@ -215,7 +229,7 @@ class RadarListAction(Handler):
     if (not user):
       self.respondWithTemplate('please-sign-in.html', {'action': 'view your Radars'})
     else:
-      radars = db.GqlQuery("select * from Radar where user = :1 order by number desc", user).fetch(1000)
+      radars = db.GqlQuery("select * from Radar where user = :1 order by number_intvalue desc", user).fetch(1000)
       self.respondWithTemplate('radar-list.html', {"radars": radars})
 
 class NotFoundAction(Handler):
@@ -248,7 +262,7 @@ class APIRadarsAction(Handler):
       page = 1
     apiresult = memcache.get("apiresult")
     if apiresult is None:
-      radars = db.GqlQuery("select * from Radar order by number desc").fetch(100,(page-1)*100)
+      radars = db.GqlQuery("select * from Radar order by number_intvalue desc").fetch(100,(page-1)*100)
       response = {"result":
                   [{"id":r.key().id(),
                     "title":r.title, 
@@ -295,11 +309,25 @@ class APIRadarsNumbersAction(Handler):
       page = 1
     apiresult = memcache.get("apiresult")
     if apiresult is None:
-      radars = db.GqlQuery("select * from Radar order by number desc").fetch(100,(page-1)*100)
+      radars = db.GqlQuery("select * from Radar order by number_intvalue desc").fetch(100,(page-1)*100)
       response = {"result":[r.number for r in radars]}
       apiresult = simplejson.dumps(response)
     self.respondWithText(apiresult)
-        
+      
+class APIRadarsIDsAction(Handler):
+  def get(self):
+    page = self.request.get("page")
+    if page:
+      page = int(page)
+    else:
+      page = 1
+    apiresult = memcache.get("apiresult")
+    if apiresult is None:
+      radars = db.GqlQuery("select * from Radar order by number desc").fetch(100,(page-1)*100)
+      response = {"result":[r.key().id() for r in radars]}
+      apiresult = simplejson.dumps(response)
+    self.respondWithText(apiresult)
+	  
 class APIAddRadarAction(Handler):
   def post(self):
     user = users.GetCurrentUser()
@@ -317,6 +345,7 @@ class APIAddRadarAction(Handler):
       originated = self.request.get("originated")
       radar = Radar(title=title,
                     number=number,
+                    number_intvalue=int(number),
                     user=user,
                     status=status,
                     description=description,
@@ -453,7 +482,7 @@ class RadarsByUserAction(Handler):
     username = self.request.get("user")
     user = users.User(username)
     if user:
-      query = db.GqlQuery("select * from Radar where user = :1 order by number desc", user)
+      query = db.GqlQuery("select * from Radar where user = :1 order by number_intvalue desc", user)
       radars = query.fetch(100)
       if len(radars) == 0:
         searchlist = '<p>No matching results found.</p>'
@@ -510,6 +539,7 @@ def main():
     ('/api/radars', APIRadarsAction),
     ('/api/radars/add', APIAddRadarAction),
     ('/api/radars/numbers', APIRadarsNumbersAction),
+    ('/api/radars/ids', APIRadarsIDsAction),
     ('/api/search', openradar.api.Search),
     ('/api/test', openradar.api.Test),
     ('/comment', CommentsAJAXFormAction),
@@ -528,6 +558,7 @@ def main():
     ('/rdar', RadarViewByIdOrNumberAction),
     ('/refresh', RefreshAction),
     ('/search', SearchAction),
+    ('/fixnumber', RadarFixNumberAction),
     # intentially disabled 
     # ('/api/secret', APISecretAction),
     # ('/reput', RePutAction),

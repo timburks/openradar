@@ -12,6 +12,7 @@ class Radar(search.SearchableModel):
     # For flexibility and robustness, we represent them all as strings.
     # The Radar Problem ID (we need an int form of this)
     number = db.StringProperty()
+    number_intvalue = db.IntegerProperty()
     
     # The radar number this radar duplicates
     parent_number = db.StringProperty()
