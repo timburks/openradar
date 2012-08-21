@@ -32,4 +32,10 @@ class Comment():
     def fetchByUser(self, user, page = 1, count = 100):
         return models.Comment.gql("WHERE user = :1 ORDER BY posted_at DESC", user).fetch(count, (page - 1) * count)
         
+class APIKey():
+    def fetchByUser(self, user):
+        return models.APIKey.gql("WHERE user = :1", user).get()
 
+    def fetchByAPIKey(self, apikey):
+        return models.APIKey.gql("WHERE apikey = :1", apikey).get()
+    

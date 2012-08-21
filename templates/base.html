@@ -4,7 +4,7 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 {% block meta-description %}{% endblock %}
 <link href="/css/screen.css" rel="stylesheet" type="text/css"/>
-<script src="/js/jquery-1.2.6.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 {%block additionalincludes %}{%endblock%}
 <title>{% block title %}{{ title }}{% endblock %}</title>
 </head>
@@ -22,6 +22,7 @@
 <span class="item"><a href="/comments">Recent Comments</a></span> |
 <span class="item"><a href="/myradars">My Radars</a></span> |
 <span class="item"><a href="/myradars/add">Add a Radar</a></span> |
+<span class="item"><a href="/apikey">My API Key</a></span> |
 <span class="item"><a href="{{ logout_url|escape }}">Sign out</a></span>
 {% else %}
 <span class="item"><a href="/">Home</a></span> |

@@ -208,3 +208,7 @@ class Bump(db.Model):
   user = db.UserProperty()              # the bumping user
   created = db.DateTimeProperty()	      # when the bump was added
 
+class APIKey(db.Model):
+  user = db.UserProperty()
+  created = db.DateTimeProperty()
+  apikey = db.StringProperty()

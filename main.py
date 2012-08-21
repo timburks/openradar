@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os, datetime, re, simplejson
-import urllib, base64
+import urllib, base64, uuid
 
 import wsgiref.handlers
 from google.appengine.ext import webapp
@@ -62,13 +62,13 @@ class FAQAction(Handler):
 
 class RadarAddAction(Handler):
   def get(self):    
-    user = users.GetCurrentUser()
+    user = self.GetCurrentUser()
     if (not user):
       self.respondWithTemplate('please-sign-in.html', {'action': 'add Radars'})
     else:
       self.respondWithTemplate('radar-add.html', {})
   def post(self):
-    user = users.GetCurrentUser()
+    user = self.GetCurrentUser()
     if (not user):
       self.respondWithTemplate('please-sign-in.html', {'action': 'add Radars'})
     else:
@@ -253,6 +253,30 @@ class HelloAction(Handler):
     else:
       print "Hello, %s!" % user.nickname()
 
+class APIKeyAction(Handler):
+  def get(self):    
+    user = users.GetCurrentUser()
+    if (not user):
+      self.respondWithTemplate('please-sign-in.html', {'action': 'view or regenerate your API key'})
+    else:
+      apikey = openradar.db.APIKey().fetchByUser(user)
+      if not apikey:
+        apikey = APIKey(user=user,
+                        apikey=str(uuid.uuid1()),
+                        created=datetime.datetime.now())
+        apikey.put()
+      self.respondWithTemplate('api-key.html', {'apikey': apikey})
+  def post(self):
+    user = users.GetCurrentUser()
+    if (not user):
+      self.respondWithTemplate('please-sign-in.html', {'action': 'regenerate your API key'})
+    else:
+      apikey = openradar.db.APIKey().fetchByUser(user)
+      if apikey:
+        apikey.delete()      
+      self.redirect("/apikey")
+      
+    
 class APIRadarsAction(Handler):
   def get(self):
     page = self.request.get("page")
@@ -327,10 +351,10 @@ class APIRadarsIDsAction(Handler):
       response = {"result":[r.key().id() for r in radars]}
       apiresult = simplejson.dumps(response)
     self.respondWithText(apiresult)
-	  
+      
 class APIAddRadarAction(Handler):
   def post(self):
-    user = users.GetCurrentUser()
+    user = self.GetCurrentUser()
     if (not user):
       self.respondWithDictionaryAsJSON({"error":"you must authenticate to add radars"})
     else:
@@ -542,6 +566,7 @@ def main():
     ('/api/radars/ids', APIRadarsIDsAction),
     ('/api/search', openradar.api.Search),
     ('/api/test', openradar.api.Test),
+    ('/api/test_authentication', openradar.api.TestAuthentication),
     ('/comment', CommentsAJAXFormAction),
     ('/comment/remove', CommentsAJAXRemoveAction),
     ('/comments', CommentsRecentAction),
@@ -559,6 +584,7 @@ def main():
     ('/refresh', RefreshAction),
     ('/search', SearchAction),
     ('/fixnumber', RadarFixNumberAction),
+    ('/apikey', APIKeyAction),
     # intentially disabled 
     # ('/api/secret', APISecretAction),
     # ('/reput', RePutAction),

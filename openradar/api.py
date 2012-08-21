@@ -261,5 +261,13 @@ class Test(handlers.Handler):
     def get(self):
         result = {"foo":[1, 2, 3, {"bar": [4, 5, 6]}]}
         self.respondWithDictionaryAsJSON(result)
-        
 
+class TestAuthentication(handlers.Handler):
+    def get(self):
+        user = self.getCurrentUser()
+        if user:
+          result = {"user":user.nickname(), "foo":[1, 2, 3, {"bar": [4, 5, 6]}]}
+          self.respondWithDictionaryAsJSON(result)
+        else:
+          self.error(401)
+          self.respondWithDictionaryAsJSON({"error": "Authentication required."})

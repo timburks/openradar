@@ -4,6 +4,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import login_required
 
+import openradar.db
 
 import datetime
 import os
@@ -36,4 +37,14 @@ class Handler(webapp.RequestHandler):
     directory = os.path.dirname(__file__)
     path = os.path.join(directory, os.path.join('../templates', template_name))
     self.response.out.write(template.render(path, values))
+
+  def getCurrentUser(self):
+    if 'Authorization' in self.request.headers: 
+        auth = self.request.headers['Authorization']
+        if auth:
+            apikey = openradar.db.APIKey().fetchByAPIKey(auth)
+            if apikey:
+                return apikey.user
+    return users.GetCurrentUser()
+
     

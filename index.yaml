@@ -65,16 +65,8 @@ indexes:
   - name: number
     direction: desc
 
-# added manually
 - kind: Radar
   properties:
   - name: user
   - name: number_intvalue
     direction: desc
-
-# added manually
-- kind: Radar
-  properties:
-  - name: parent_number
-  - name: number
-  
