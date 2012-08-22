@@ -38,7 +38,7 @@ class Handler(webapp.RequestHandler):
     path = os.path.join(directory, os.path.join('../templates', template_name))
     self.response.out.write(template.render(path, values))
 
-  def getCurrentUser(self):
+  def GetCurrentUser(self):
     if 'Authorization' in self.request.headers: 
         auth = self.request.headers['Authorization']
         if auth:

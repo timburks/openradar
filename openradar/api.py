@@ -264,7 +264,7 @@ class Test(handlers.Handler):
 
 class TestAuthentication(handlers.Handler):
     def get(self):
-        user = self.getCurrentUser()
+        user = self.GetCurrentUser()
         if user:
           result = {"user":user.nickname(), "foo":[1, 2, 3, {"bar": [4, 5, 6]}]}
           self.respondWithDictionaryAsJSON(result)

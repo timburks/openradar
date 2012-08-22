@@ -362,9 +362,10 @@ class APIAddRadarAction(Handler):
       number = self.request.get("number")
       status = self.request.get("status")
       description = self.request.get("description")
+      resolved = self.request.get("resolved")
       product = self.request.get("product")
       classification = self.request.get("classification")
-      reproducible = int(self.request.get("reproducible"))
+      reproducible = self.request.get("reproducible")
       product_version = self.request.get("product_version")
       originated = self.request.get("originated")
       radar = Radar(title=title,
