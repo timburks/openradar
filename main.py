@@ -118,10 +118,14 @@ class RadarAddAction(Handler):
       self.redirect("/myradars")
 
 RADAR_PATTERN = re.compile("/([0-9]+)")
-
 class RadarViewByPathAction(Handler):
   def get(self):    
     user = users.GetCurrentUser()
+    if not user:
+        page = memcache.get(self.request.path)
+        if page:
+            self.respondWithText(page)
+            return
     m = RADAR_PATTERN.match(self.request.path)
     if m:
       bare = self.request.get("bare")
@@ -133,8 +137,12 @@ class RadarViewByPathAction(Handler):
       radar = radars[0]
       if (not radar):
         self.respondWithTemplate('radar-missing.html', {"number":number})
-      else:
-        self.respondWithTemplate('radar-view.html', {"mine":(user == radar.user), "radar":radar, "radars":radar.children(), "comments": radar.comments(), "bare":bare})
+      else:	
+        path = os.path.join(os.path.dirname(__file__), os.path.join('templates', 'radar-view.html'))        
+        page = template.render(path, {"mine":(user == radar.user), "radar":radar, "radars":radar.children(), "comments": radar.comments(), "bare":bare})
+        if not user:	    
+            memcache.add(self.request.path, page, 3600) # one hour, but we also invalidate on edits and adds
+        self.respondWithText(page)
       return
 
 class RadarViewByIdOrNumberAction(Handler):
