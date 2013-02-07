@@ -14,7 +14,7 @@
     <td>Resolved:</td><td><input type="text" name="resolved" value="{{ radar.resolved|default_if_none:"" }}"></input></td></tr>
 
 <tr><td>Title:</td><td colspan=3 style="padding-top:10px; padding-bottom:10px">
-<input type="text" size="70" name="title" value="{{ radar.title|escape|default_if_none:"" }}"></input></td></tr>
+<input type="text" size="70" name="title" value="{{ radar.title|default_if_none:"" }}"></input></td></tr>
 
 <tr><td>Product:</td><td><input type="text" name="product" value="{{ radar.product|default_if_none:"" }}"></input></td>
     <td>Product Version:</td><td><input type="text" name="product_version" value="{{ radar.product_version|default_if_none:"" }}"></input></td></tr>
