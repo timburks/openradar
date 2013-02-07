@@ -4,7 +4,7 @@
   <div class="comment">
     <a class="keyref" name="{{comment.key}}"></a>
     {% if comment.subject %}
-    <h3>{{ comment.subject|escape }}</h3>
+    <h3>{{ comment.subject }}</h3>
     {% endif %}
     <div class="commentbody">
       {{ comment.html_body }}

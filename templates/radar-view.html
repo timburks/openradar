@@ -4,13 +4,13 @@
 <script src="/js/comments.js" type="text/javascript" charset="utf-8"></script>
 {% endblock %}
 
-{% block title %}rdar://{{ radar.number|escape }}: {{ radar.title|escape }}{% endblock %}
+{% block title %}rdar://{{ radar.number }}: {{ radar.title }}{% endblock %}
 
 {% block content %}
-<h3>{{ radar.title|escape }}</h3>
+<h3>{{ radar.title }}</h3>
 <div>
 <table>
-<tr><td>Originator:</td><td style="min-width:200px">{{ radar.username|escape }}</td>
+<tr><td>Originator:</td><td style="min-width:200px">{{ radar.username }}</td>
 {% if mine %}	
 <td><a href="/myradars/edit?id={{ radar.key.id }}">Modify My Radar</a></td>
 {% else %}
@@ -18,7 +18,7 @@
 {% endif %}
 </tr>
 
-<tr><td>Number:</td><td><a href="rdar://problem/{{ radar.number|escape }}">rdar</a>://<a href="/{{radar.number}}">{{ radar.number|escape }}</a></td>
+<tr><td>Number:</td><td><a href="rdar://problem/{{ radar.number }}">rdar</a>://<a href="/{{radar.number}}">{{ radar.number }}</a></td>
     <td>Date Originated:</td><td>{{ radar.originated|default_if_none:"" }}</td></tr>
 
 <tr><td>Status:</td><td>{{ radar.status|default_if_none:"" }}</td>
@@ -33,7 +33,7 @@
 </table>
 <div style="padding:10px; font-size:80%">
 <pre style="white-space:pre-wrap; max-width:800px"> 
-{{ radar.description|escape }}
+{{ radar.description }}
 </pre>
 </div>
 </div>

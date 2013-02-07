@@ -9,11 +9,11 @@
 {% if radars %}
 {% for radar in radars %}
     <tr>
-        <td><a href="rdar://problem/{{ radar.number|escape }}">rdar</a>://<a href="/{{ radar.number|escape }}">{{ radar.number|escape }}</a></td>
-        <td>{{ radar.status|escape }}</td>
-        <td>{{ radar.username|escape }}</td>
-        <td>{{ radar.product|escape }}</td>
-        <td><a href="/{{ radar.number }}">{{ radar.title|escape }}</a></td>
+        <td><a href="rdar://problem/{{ radar.number }}">rdar</a>://<a href="/{{ radar.number }}">{{ radar.number }}</a></td>
+        <td>{{ radar.status }}</td>
+        <td>{{ radar.username }}</td>
+        <td>{{ radar.product }}</td>
+        <td><a href="/{{ radar.number }}">{{ radar.title }}</a></td>
     </tr>
 {% endfor %}
 {% endif %}

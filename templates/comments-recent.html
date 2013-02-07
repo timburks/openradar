@@ -9,15 +9,15 @@
 <div class="commentWithReplies">
   <div class="comment">
     <a class="keyref" name="{{comment.key}}"></a>
-    <h4><a href="/{{ comment.radarnumber|escape }}#{{ comment.key }}">Open Radar {{ comment.radarnumber|escape }}: {{ comment.radartitle|escape }}</a></h4>
+    <h4><a href="/{{ comment.radarnumber }}#{{ comment.key }}">Open Radar {{ comment.radarnumber }}: {{ comment.radartitle }}</a></h4>
     {% if comment.subject %}
-    <h3>{{ comment.subject|escape }}</h3>
+    <h3>{{ comment.subject }}</h3>
     {% endif %}
     <div class="commentbody">
       {{ comment.html_body }}
     </div>
     <div class="meta">
-      By <strong>{{ comment.username|escape }}</strong> at <a href="/{{ comment.radarnumber|escape }}#{{ comment.key }}">{{ comment.posted_at }}</a>
+      By <strong>{{ comment.username }}</strong> at <a href="/{{ comment.radarnumber }}#{{ comment.key }}">{{ comment.posted_at }}</a>
     </div>
   </div>
 </div>
