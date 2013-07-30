@@ -23,6 +23,16 @@ Page {{ pagenumber }}
 </h1>
 
 {{ biglist }}
+
+<h1>
+{% if showprev %}
+<a href="/page/{{ showprev }}">back</a>
+{% endif %}
+Page {{ pagenumber }}
+{% if shownext %}
+<a href="/page/{{ shownext }}">next</a>
+{% endif %}
+</h1>
 {% endblock %}
 
 {% block sidebar %}
