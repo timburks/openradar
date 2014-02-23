@@ -321,14 +321,18 @@ class APICommentsAction(Handler):
     else:
       page = 1
     comments = db.GqlQuery("select * from Comment order by posted_at desc").fetch(100,(page-1)*100)
-    response = {"result":
-                [{"id":c.key().id(),
-                  "user":c.user.email(), 
-                  "subject":c.subject,
-                  "body":c.body,
-                  "radar":c.radar.number,
-                  "is_reply_to":c.is_reply_to and c.is_reply_to.key().id() or ""}
-                 for c in comments]}
+    result = []
+    for c in comments:
+      try:
+        result.append({"id":c.key().id(),
+                       "user":c.user.email(),
+                       "subject":c.subject,
+                       "body":c.body,
+                       "radar":c.radar.number,
+                       "is_reply_to":c.is_reply_to and c.is_reply_to.key().id() or ""})  
+      except Exception:
+        None
+    response = {"result":result}
     apiresult = simplejson.dumps(response)
     self.respondWithText(apiresult)
     
