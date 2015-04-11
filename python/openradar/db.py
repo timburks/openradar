@@ -5,7 +5,7 @@ class Radar():
         return models.Radar.gql("ORDER BY number DESC").fetch(count, (page - 1) * count)
         
     def fetchCount(self):
-        return models.Radar.all().count()
+        return models.Radar.all().count(limit=100000)
         
     def fetchById(self, id):
         return models.Radar.get_by_id(id)
@@ -27,7 +27,7 @@ class Comment():
         return models.Comment.gql("ORDER BY posted_at DESC").fetch(count, (page - 1) * count)
         
     def fetchCount(self):
-        return models.Comment.all().count()
+        return models.Comment.all().count(limit=100000)
         
     def fetchByUser(self, user, page = 1, count = 100):
         return models.Comment.gql("WHERE user = :1 ORDER BY posted_at DESC", user).fetch(count, (page - 1) * count)
