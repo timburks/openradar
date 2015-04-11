@@ -1,4 +1,4 @@
-application: openradar
+application: openradar-hrd
 version: 1
 runtime: python
 api_version: 1
