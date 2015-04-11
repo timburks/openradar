@@ -16,7 +16,7 @@ class Handler(webapp.RequestHandler):
     self.response.out.write(simplejson.dumps(d) + "\n")
       
   def respondWithText(self, text):
-    self.response.out.write(text)
+    self.response.out.write(unicode(text))
     self.response.out.write("\n")
     
   """Supplies a common template generation function.
@@ -36,7 +36,7 @@ class Handler(webapp.RequestHandler):
     values.update(template_values)
     directory = os.path.dirname(__file__)
     path = os.path.join(directory, os.path.join('../templates', template_name))
-    self.response.out.write(template.render(path, values))
+    self.response.out.write(unicode(template.render(path, values)))
 
   def GetCurrentUser(self):
     if 'Authorization' in self.request.headers: 

@@ -12,11 +12,6 @@ indexes:
 
 - kind: Comment
   properties:
-  - name: posted_at
-    direction: desc
-
-- kind: Comment
-  properties:
   - name: user
   - name: number
     direction: desc
@@ -30,21 +25,6 @@ indexes:
 - kind: Radar
   properties:
   - name: __searchable_text_index
-  - name: number
-    direction: desc
-
-- kind: Radar
-  properties:
-  - name: created
-    direction: desc
-
-- kind: Radar
-  properties:
-  - name: creation
-    direction: desc
-
-- kind: Radar
-  properties:
   - name: number
     direction: desc
 

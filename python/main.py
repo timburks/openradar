@@ -244,7 +244,7 @@ class NotFoundAction(Handler):
   def get(self):
     self.response.out.write("<h1>Resource not found</h1>")
     self.response.out.write("<pre>")
-    self.response.out.write(self.request)
+    self.response.out.write(str(self.request))
     self.response.out.write("</pre>")
 
 class RefreshAction(Handler):
