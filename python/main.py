@@ -292,22 +292,30 @@ class APIRadarsAction(Handler):
       page = int(page)
     else:
       page = 1
+    count = self.request.get("count")
+    if count:
+      count = int(count)
+    else:
+      count = 100
     apiresult = memcache.get("apiresult")
     if apiresult is None:
-      radars = db.GqlQuery("select * from Radar order by number_intvalue desc").fetch(100,(page-1)*100)
+      radars = db.GqlQuery("select * from Radar order by number_intvalue desc").fetch(count,(page-1)*count)
       response = {"result":
                   [{"id":r.key().id(),
-                    "title":r.title, 
-                    "number":r.number, 
-                    "user":r.user.email(),
-                    "status":r.status, 
-                    "description":r.description,
-                    "resolved":r.resolved,
-                    "product":r.product,
                     "classification":r.classification,
-                    "reproducible":r.reproducible,
+                    "created":str(r.created),
+                    "description":r.description,
+                    "modified":str(r.modified),
+                    "number":r.number, 
+                    "originated":r.originated,
+                    "parent":r.parent_number,
+                    "product":r.product,
                     "product_version":r.product_version,
-                    "originated":r.originated}
+                    "reproducible":r.reproducible,
+                    "resolved":r.resolved,
+                    "status":r.status, 
+                    "title":r.title, 
+                    "user":r.user.email()}
                    for r in radars]}
       apiresult = simplejson.dumps(response)
       #memcache.add("apiresult", apiresult, 600) # ten minutes, but we also invalidate on edits and adds
@@ -320,18 +328,28 @@ class APICommentsAction(Handler):
       page = int(page)
     else:
       page = 1
-    comments = db.GqlQuery("select * from Comment order by posted_at desc").fetch(100,(page-1)*100)
+    count = self.request.get("count")
+    if count:
+      count = int(count)
+    else:
+      count = 100
+    comments = db.GqlQuery("select * from Comment order by posted_at desc").fetch(count,(page-1)*count)
     result = []
     for c in comments:
       try:
-        result.append({"id":c.key().id(),
-                       "user":c.user.email(),
-                       "subject":c.subject,
-                       "body":c.body,
-                       "radar":c.radar.number,
-                       "is_reply_to":c.is_reply_to and c.is_reply_to.key().id() or ""})  
+        commentInfo = {
+          "id":c.key().id(),
+          "user":c.user.email(), 
+          "subject":c.subject,
+          "body":c.body,
+          "radar":c.radar.number,
+          "created":str(c.posted_at),
+        }
+        if c.is_reply_to:
+            commentInfo["is_reply_to"] = c.is_reply_to.key().id()
+        result.append(commentInfo)  
       except Exception:
-        None
+        None # we'll get here if the corresponding radar was deleted
     response = {"result":result}
     apiresult = simplejson.dumps(response)
     self.respondWithText(apiresult)

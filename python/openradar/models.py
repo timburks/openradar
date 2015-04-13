@@ -187,14 +187,16 @@ class Comment(search.SearchableModel):
       return "deleted"
     
   def toDictionary(self):
-    return {
+    result = {
       "id":self.key().id(),
       "user":self.user.email(), 
       "subject":self.subject,
       "body":self.body,
       "radar":self.radar.number,
-      "is_reply_to":self.is_reply_to and self.is_reply_to.key().id() or ""
     }
+    if self.is_reply_to:
+        result["is_reply_to"] = self.is_reply_to.key().id()
+    return result
     
 
 class Profile(db.Model):
