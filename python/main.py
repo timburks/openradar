@@ -36,7 +36,10 @@ class RadarListByPageAction(Handler):
   def get(self):  
     m = PAGE_PATTERN.match(self.request.path)
     if m:
-      number = m.group(1) 
+      number = m.group(1)
+      if (int(number) > 500):
+        self.respondWithText('invalid page request')
+        return 
       if (int(number) > 1):
         showprev = int(number)-1
       else: 
