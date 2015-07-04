@@ -38,7 +38,8 @@ class RadarListByPageAction(Handler):
     if m:
       number = m.group(1)
       if (int(number) > 500):
-        self.respondWithText('invalid page request')
+        self.error(404)
+        self.respondWithText('Not found')
         return 
       if (int(number) > 1):
         showprev = int(number)-1
