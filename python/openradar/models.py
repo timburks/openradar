@@ -49,7 +49,7 @@ class Radar(search.SearchableModel):
         return db.Model.put(self)
     
     def comments(self):
-        return Comment.gql("WHERE radar = :1 AND is_reply_to = :2", self, None)
+        return Comment.gql("WHERE radar = :1 AND is_reply_to = :2 order by posted_at desc", self, None)
     
     def children(self):
         gqlQuery = Radar.gql("WHERE parent_number = :1 ORDER BY number ASC", self.number)
@@ -149,7 +149,7 @@ class Comment(search.SearchableModel):
     return self.radar_exists() and self.radar.title or "Deleted"
 
   def replies(self):
-    return Comment.gql("WHERE is_reply_to = :1", self)
+    return Comment.gql("WHERE is_reply_to = :1 order by posted_at desc", self)
   
   # I know this is a bad place to put it, but my only other idea is custom django template tags, and I just couldn't get those to work
   def draw(self, onlyInner = False):
