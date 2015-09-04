@@ -586,6 +586,74 @@ class LoginAction(webapp.RequestHandler):
   def get(self):
     self.response.out.write(users.create_login_url("/"))
 
+class APIRecentRadarsAction(Handler):
+  def get(self):
+    user = self.GetCurrentUser()
+    if (not user):
+      self.respondWithDictionaryAsJSON({"error":"please authenticate by setting the Authorization header to your API key"})
+      return
+    cursor = self.request.get("cursor")
+    if cursor:
+      cursor = cursor
+    else:
+      cursor = None
+    radars = db.GqlQuery("select * from Radar order by modified desc")
+    if cursor:
+      radars.with_cursor(start_cursor=cursor)
+    results = []
+    for r in radars:
+      results.append({"id":r.key().id(),
+                      "title":r.title, 
+                      "number":r.number, 
+                      "user":r.user.email(),
+                      "status":r.status, 
+                      "description":r.description,
+                      "resolved":r.resolved,
+                      "product":r.product,
+                      "classification":r.classification,
+                      "reproducible":r.reproducible,
+                      "product_version":r.product_version,
+		      "created":str(r.created),
+                      "modified":str(r.modified),
+                      "originated":r.originated})
+      if len(results) == 100:
+        break
+    response = {"result":results, "cursor":radars.cursor()}
+    apiresult = simplejson.dumps(response)
+    self.respondWithText(apiresult)
+
+class APIRecentCommentsAction(Handler):
+  def get(self):
+    user = self.GetCurrentUser()
+    if (not user):
+      self.respondWithDictionaryAsJSON({"error":"please authenticate by setting the Authorization header to your API key"})
+      return
+    cursor = self.request.get("cursor")
+    if cursor:
+      cursor = cursor
+    else:
+      cursor = None
+    comments = db.GqlQuery("select * from Comment order by posted_at desc")
+    if cursor:
+      comments.with_cursor(start_cursor=cursor)
+    results = []
+    for c in comments:
+      try:
+        results.append({"id":c.key().id(),
+                        "user":c.user.email(),
+                        "subject":c.subject,
+                        "body":c.body,
+                        "radar":c.radar.number,
+                        "posted_at":str(c.posted_at),
+                        "is_reply_to":c.is_reply_to and c.is_reply_to.key().id() or None})  
+      except Exception:
+        None
+      if len(results) == 100:
+        break
+    response = {"result":results, "cursor":comments.cursor()}
+    apiresult = simplejson.dumps(response)
+    self.respondWithText(apiresult)
+    
 def main():
   application = webapp.WSGIApplication([
     ('/', IndexAction),
@@ -602,6 +670,8 @@ def main():
     ('/api/search', openradar.api.Search),
     ('/api/test', openradar.api.Test),
     ('/api/test_authentication', openradar.api.TestAuthentication),
+    ('/api/radars/recent', APIRecentRadarsAction),
+    ('/api/comments/recent', APIRecentCommentsAction),
     ('/comment', CommentsAJAXFormAction),
     ('/comment/remove', CommentsAJAXRemoveAction),
     ('/comments', CommentsRecentAction),
