@@ -540,12 +540,11 @@ class RadarsByUserAction(Handler):
   def get(self):
     username = self.request.get("user")
     user = users.User(username)
+    searchlist = ""
     if user:
       query = db.GqlQuery("select * from Radar where user = :1 order by number_intvalue desc", user)
       radars = query.fetch(100)
-      if len(radars) == 0:
-        searchlist = '<p>No matching results found.</p>'
-      else:
+      if len(radars) > 0:
         path = os.path.join(os.path.dirname(__file__), os.path.join('templates', 'biglist.html'))
         searchlist = template.render(path, {'radars':radars})
       self.respondWithTemplate('byuser.html', {"radarlist": searchlist})
@@ -557,15 +556,14 @@ class SearchAction(Handler):
     querystring = self.request.get("query")
     keywords = querystring.split(" ")
     keyword = keywords[0]
+    searchlist = ""
     try:
       query = Radar.all().search(keyword).order("-number")
       radars = query.fetch(100)
     except Exception:
-      self.respondWithTemplate('search.html', {"query":keyword, "searchlist":"<p>No matching results found.</p>"})
+      self.respondWithTemplate('search.html', {"query":keyword, "searchlist":searchlist})
       return
-    if len(radars) == 0:
-      searchlist = '<p>No matching results found.</p>'
-    else:
+    if len(radars) > 0:
       path = os.path.join(os.path.dirname(__file__), os.path.join('templates', 'biglist.html'))
       searchlist = template.render(path, {'radars':radars})
     self.respondWithTemplate('search.html', {"query":keyword, "searchlist": searchlist})
