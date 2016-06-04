@@ -291,11 +291,18 @@ class APIKeyAction(Handler):
     
 class APIRadarsAction(Handler):
   def get(self):
+    user = self.GetCurrentUser()
+    if (not user):
+      self.respondWithDictionaryAsJSON({"error":"please authenticate by setting the Authorization header to your API key (http://www.openradar.me/apikey)"})
+      return
     page = self.request.get("page")
     if page:
       page = int(page)
     else:
       page = 1
+    if page > 10:
+      self.respondWithText("")
+      return
     count = self.request.get("count")
     if count:
       count = int(count)
@@ -327,11 +334,18 @@ class APIRadarsAction(Handler):
 
 class APICommentsAction(Handler):
   def get(self):
+    user = self.GetCurrentUser()
+    if (not user):
+      self.respondWithDictionaryAsJSON({"error":"please authenticate by setting the Authorization header to your API key (http://www.openradar.me/apikey)"})
+      return
     page = self.request.get("page")
     if page:
       page = int(page)
     else:
       page = 1
+    if page > 10:
+      self.respondWithText("")
+      return
     count = self.request.get("count")
     if count:
       count = int(count)
@@ -590,7 +604,7 @@ class APIRecentRadarsAction(Handler):
   def get(self):
     user = self.GetCurrentUser()
     if (not user):
-      self.respondWithDictionaryAsJSON({"error":"please authenticate by setting the Authorization header to your API key"})
+      self.respondWithDictionaryAsJSON({"error":"please authenticate by setting the Authorization header to your API key (http://www.openradar.me/apikey)"})
       return
     cursor = self.request.get("cursor")
     if cursor:
@@ -626,7 +640,7 @@ class APIRecentCommentsAction(Handler):
   def get(self):
     user = self.GetCurrentUser()
     if (not user):
-      self.respondWithDictionaryAsJSON({"error":"please authenticate by setting the Authorization header to your API key"})
+      self.respondWithDictionaryAsJSON({"error":"please authenticate by setting the Authorization header to your API key (http://www.openradar.me/apikey)"})
       return
     cursor = self.request.get("cursor")
     if cursor:
