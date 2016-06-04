@@ -1,0 +1,44 @@
+{{define "topbar"}}
+<div class="contain-to-grid" style="margin-bottom:20px;">
+ <nav class="top-bar" data-topbar=1>
+  <ul class="title-area">
+   <li class="name">
+    <h1><a href="/">Open Radar</a></h1>
+   </li>
+   <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
+  </ul>
+  <section class="top-bar-section">
+   <ul class="right">
+    <li class="has-form">
+     <div class="row collapse">
+      <form action="/search">
+        <input type="text"
+ 	           name="terms"
+ 	           placeholder="Search Open Radar"
+ 	           value=""/>
+      </form>
+     </div>
+    </li>
+	{{if .User}}
+    <li class="has-dropdown">
+     <a href="#">{{.User.Email}}</a>
+     <ul class="dropdown">
+      <li><a href="/apikey">API Key</a></li>
+      <li><a href="/signout">Sign out</a></li>
+     </ul>
+    </li>
+	{{else}}
+    <li class="active"><a href={{.LoginURL}}>Sign in with Google</a></li>
+	{{end}}
+   </ul>
+   <ul class="left">
+    <li><a href="/about">About</a></li>
+    <li><a href="/comments">Recent Comments</a></li>
+	{{if .User}}
+    <li><a href="/myradars">My Radars</a></li>
+	{{end}}
+   </ul>
+  </section>
+ </nav>
+</div>
+{{end}}

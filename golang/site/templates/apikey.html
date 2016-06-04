@@ -1,0 +1,17 @@
+{{define "body"}}
+{{template "topbar" .}}
+<div class="row">
+<div class="large-9 medium-10 small-12 columns">
+<h1>OpenRadar API key</h1>
+<p>You can use this key to allow desktop and mobile clients to access your OpenRadar account.</p> 
+<p>When writing HTTP requests, add this key to the Authorization header to authenticate your requests.</p>
+<h3><strong>{{.APIKey}}</strong></h3>
+<p>To keep your account secure, you are strongly encouraged to use https for all authenticated API requests.</p>
+<form name="keyform" action="/apikey" method="POST">
+<p>To regenerate your API key, press
+<a href="" onclick="keyform.submit(); return false;">here</a>.
+Your previous key will be deleted.</p>
+</form>
+</div>
+</div>
+{{end}}

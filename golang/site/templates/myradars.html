@@ -1,0 +1,49 @@
+{{define "body"}}
+{{template "topbar" .}}
+<div class="row">
+<div class="large-12 medium-12 small-12 columns">
+
+<div class="row">
+<div class="medium-8 columns">
+<h1>My Radars</h1>	
+</div>
+<div class="medium-4 columns">
+<div style="float:right">
+<a class="button" href="/myradars/add">Add a Radar</a>
+</div>
+</div>
+</div>
+
+{{if .MoreLink}}<div><a href="{{.MoreLink}}">More</a></div>{{end}}
+
+<div class="row">
+<div class="small-12 columns">
+{{if .Radars}}
+<table style="width:100%">
+<thead>
+<tr>
+<th></th>
+<th>Number</th>
+<th>Status</th>
+<th>Title</th>
+</tr>
+<thead>
+<tbody>
+{{range .Radars}}
+<tr>
+<td><a href="/myradars/{{.Number}}">Modify</a></td>
+<td><a href="rdar://problem/{{.Number}}">rdar://{{.Number}}</a></td>
+<td>{{.Status}}</td>
+<td><a href="/{{.Number}}">{{.Title}}</a></td>
+</tr>
+{{end}}
+</tbody>
+</table>
+{{else}}
+<p>A journey of a thousand radars begins with <a href="/myradars/add">the first post</a>.</p>
+{{end}}
+</div>
+</div>
+</div>
+</div>
+{{end}}

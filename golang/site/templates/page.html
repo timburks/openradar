@@ -1,0 +1,35 @@
+{{define "page"}}
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf=8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Community bug tracking for Mac and iOS developers."/>
+<meta name="keywords" content="Apple,radar,bug tracking"/>
+<meta name="author" content="Tim Burks"/>
+<title>{{.Title}}</title>
+<link rel="stylesheet" href="/foundation.min.css"/>
+<link rel="stylesheet" href="/openradar.css"/>
+<script src="/modernizr.js"></script>
+</head>
+<body>
+{{template "body" .}}
+<div class="row">
+<div class="large-12 columns" style="margin-top:2em">
+<p>
+<strong>Please note: </strong>
+Reports posted on Open Radar will not necessarily be seen by Apple. 
+All problems should be submitted at 
+<a href="http://bugreport.apple.com">bugreport.apple.com</a>
+before they are posted here.
+Please only post radars that you have filed yourself, 
+and do not include Apple confidential information in your posts. Thank you!
+</p>
+</div>
+</div>
+<script src="/jquery.js"></script>
+<script src="/foundation.min.js"></script>
+<script>$(document).foundation();</script>
+<script src="/comments.js"></script>
+</body>
+</html>
+{{end}}

@@ -1,0 +1,10 @@
+title: Status
+id: status
+values:
+- Open
+- Closed (Fixed)
+- Closed (Behaves Correctly)
+- Duplicate
+- Closed as Duplicate
+- Other
+- No Value

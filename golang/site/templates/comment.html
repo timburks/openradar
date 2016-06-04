@@ -1,0 +1,32 @@
+{{define "comment"}}
+<div class="commentWithReplies">
+  <div class="comment">
+    <a class="comment_id" name="{{.Number}}"></a>
+	{{if .Radar}}
+    <h4><a href="/{{.RadarNumber}}#{{.Number}}">Open Radar {{.RadarNumber}}: {{.Radar.Title}}</a></h4>
+	{{end}}
+    {{if .Subject}}
+    <h3>{{.Subject}}</h3>
+    {{end}}
+    <div class="commentbody">
+      {{markdown .Body}}
+    </div>
+    <div class="meta">
+      By <strong>{{.UserName }}</strong> at <a href="/{{.RadarNumber}}#{{.Number}}">{{.Created | displayDate}}</a>
+	  {{if .AllowReplies}}
+      (<a href="#" onclick="javascript:replyForm(this); return false">reply...</a>)
+      {{if .IsEditable}}
+        <input class="button tiny right" style="margin-right:1em" type="button" name="remove" value="Remove" onclick="removeComment(this); return false;"/>		
+        <input class="button tiny right" style="margin-right:1em" type="button" name="edit" value="Edit" onclick="editForm(this); return false;"/>
+      {{end}}
+	  {{end}}
+	  <div style="clear:both"></div>	  	  	  
+    </div>
+  </div>
+  <div class="indent">
+  {{range .Replies}}
+  	{{template "comment" .}}
+  {{end}}
+  </div>
+</div>
+{{end}}

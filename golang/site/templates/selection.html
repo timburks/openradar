@@ -1,0 +1,11 @@
+{{define "selection"}}
+<h3>{{.Title}}</h3>
+<div class="panel selection">
+<label>
+{{range $index, $value := .Values}}	
+<input type="radio" id="{{$.Id}}_{{$index}}" name="{{$.Id}}" {{if eq $.Value $value}}checked{{end}} value="{{$value}}">
+<label for="{{$.Id}}_{{$index}}">{{$value}}</label>
+{{end}}
+</label>
+</div>
+{{end}}

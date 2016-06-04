@@ -1,0 +1,15 @@
+{{define "selection-grouped"}}
+<h3>{{.Title}}</h3>
+<div class="panel selection">
+<label>
+{{range $groupIndex, $group := .Groups}}
+<p>{{.Title}}<br/>
+{{range $index, $value := .Values}}	
+<input type="radio" id="{{$.Id}}_{{$groupIndex}}_{{$index}}" name="{{$.Id}}" {{if eq $.Value $value}}checked{{end}} value="{{$value}}">
+<label for="{{$.Id}}_{{$groupIndex}}_{{$index}}">{{$value}}</label>
+{{end}}
+</p>
+{{end}}
+</label>
+</div>
+{{end}}

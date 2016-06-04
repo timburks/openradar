@@ -1,0 +1,47 @@
+{{define "body"}}
+{{template "topbar" .}}
+<div class="row">
+<div class="small-12 columns">
+	
+<div class="row">
+<div class="medium-12 columns">
+<h1>Community Bug Reports {{if .MoreLink}}<a href="{{.MoreLink}}" class="Small Button Right">More</a>{{end}}</h1>	
+</div>
+</div>	
+	
+<div class="row">
+<div class="small-12 columns">
+<table style="width:100%">
+<thead>
+<th>Number</th>
+<th>Status</th>
+<th>Originator</th>
+<th>Product</th>
+<th>Title</th>
+</thead>
+<tbody>
+{{range .Radars}}
+<tr>
+<td><a href="/{{.Number}}">{{.Number}}</a></td>
+<td>{{.Status}}</td>
+<td>{{.UserName | ScreenNameForUserName}}</td>
+<td>{{.Product}}</td>
+<td><a href="/{{.Number}}">{{.Title}}</a></td>
+</tr>
+{{end}}
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="row">
+<div class="medium-12 columns">
+{{if .MoreLink}}
+<h1><a href="{{.MoreLink}}" class="Small Button Expand">More</a></h1>
+{{end}}
+</div>
+</div>	
+
+</div>
+</div>
+{{end}}

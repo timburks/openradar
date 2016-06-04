@@ -1,0 +1,22 @@
+{{define "comment-form"}}
+<form onsubmit="submitComment(this); return false;">
+  <input type="hidden" name="comment_id", value="{{.Comment.Number}}" />
+  <input type="hidden" name="radar_id", value="{{.Comment.RadarNumber}}" />
+  <input type="hidden" name="parent_id", value="{{.Comment.IsReplyTo}}" />
+  <div class="comment">
+    <h3><input name="subject" value="{{.Comment.Subject}}" /></h3>
+    <div class="commentbody">
+      <textarea name="body" rows="10">{{.Comment.Body}}</textarea>
+    </div>
+    <div class="meta">
+      {{if .Comment.IsSaved}}
+        <input class="tiny button" type="submit" value="Edit"/>
+        <input class="tiny button" type="button" name="cancel" value="Cancel" onclick="cancelEdit(this)"/>
+      {{else}}
+        <input class="tiny button" type="submit" value="Post message" />
+        <input class="tiny button" type="button" value="Cancel" onclick="cancelNew(this)"/>
+      {{end}}
+    </div>
+  </div>
+</form>
+{{end}}

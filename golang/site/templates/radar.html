@@ -1,0 +1,42 @@
+{{define "body"}}
+{{template "topbar" .}}
+<div class="row">
+<div class="small-12 columns">
+{{template "panel" .Radar}}
+
+<div class="row">
+<div class="large-3 medium-3 small-12 large-push-9 medium-push-9 columns" style="text-align:right">
+{{range .Fields}}
+{{template "field" .}}
+{{end}}
+</div>
+<div class="small-12 medium-9 large-9 large-pull-3 medium-pull-3 columns" style="padding:0 30px;">
+<p style="white-space: pre-wrap; word-wrap: break-word; font-family:Courier, monospace; font-size:80%">
+{{.Radar.Description}}
+</p>
+</div>
+</div>
+
+<div class="row">
+<div class="small-12 columns">
+<h3>Comments</h3>
+<div class="comments">
+{{if .Radar.Comments}}
+{{range .Radar.Comments}}
+{{template "comment" .}}
+{{end}}
+{{end}}
+</div>
+{{if .User}}
+<input id="newcomment" type="button" class="button" value="Add a comment" />
+{{else}}
+<a class="button" href={{.LoginURL}}>Sign in to post comments and radars</a>
+{{end}}
+</div>
+</div>
+
+<div style="display:none;" id="radar">{{.Radar.Number}}</div>
+
+</div>
+</div>
+{{end}}

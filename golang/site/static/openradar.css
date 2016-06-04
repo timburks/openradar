@@ -1,0 +1,300 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	vertical-align: baseline;
+	background-color: transparent;
+	font-weight: normal;
+}
+
+:focus {
+	outline: 0;
+}
+
+em {
+	font-style: italic;
+}
+
+strong {
+	font-weight: bold;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 1em;
+}
+
+h1 {
+	font-size: 2em;
+}
+
+h2 {
+	font-size: 1.7em;
+}
+
+h3 {
+	font-size: 1.5em;
+}
+
+h4 {
+	font-size: 1.25em;
+}
+
+h1 a, h2 a, h3 a, h4 a {
+	text-decoration: none;
+}
+
+
+input, select, textarea {
+}
+input:focus, textarea:focus {
+	background-color: #fffff0;
+}
+
+#login {
+        float:right;
+}
+
+#page {
+	margin-left: 40px;
+	margin-right: 40px;
+	min-width: 700px;
+	max-width: 1200px;
+	position: relative;
+	overflow: hidden;
+}
+
+#header {
+	padding: 0.25em 0;
+	border-top: 5px solid #246; 
+	
+}
+
+#header ul {
+	float: left;
+	margin-left: 2.8571em;	/* 80px */
+}
+
+#header li {
+	display: inline;
+	margin-right: 0.25em;
+}
+
+#header form {
+	float: right;
+	margin-right: 0;
+}
+
+#header form label,
+#header form input,
+#header form button {
+	vertical-align: middle;
+}
+
+#header button {
+	font-size: 0.8571em;	/* 12px */
+	background-color: #369;
+	color: #fff;
+}
+
+#header button:hover,
+#header button:focus {
+	background-color: #fff;
+	color: #369;
+	border-color: #369;
+}
+
+#header .question {
+   clear:right;
+   float:right;
+   margin-right:0;
+   margin-top:0;
+   margin-bottom:0;
+}
+
+#content {
+   clear:both;
+   float:left;
+   width:auto;
+   margin-top:20px;
+   min-height:400px;
+}
+
+#sidebar {
+   clear:right;
+   float:right;
+   width:250px;
+   border: none;
+   margin-top:20px;
+}
+
+#sidebar form {
+   border: solid 1px #E0E0E0;
+   background: #F0F0F0;
+   padding-top:5px;
+   padding-left:5px;
+   margin:5px;
+}
+
+#sidebar form td {
+   text-align:right;
+}
+
+#sidebar form table {
+   margin-left:20px;
+}
+
+#sidebar form label,
+#sidebar form input,
+#sidebar form button {
+	vertical-align: middle;
+}
+
+#footer {
+	clear: both;
+	margin-top: 100px;
+	padding: 0px 0px 0px 10px;
+	border-top: 5px solid #202020;
+}
+
+#footer ul {
+	margin: 1em 0;
+}
+
+#footer li {
+	display: inline;
+	margin-right: 1em;
+}
+
+#content table th {
+   font-weight: bold;
+}
+
+#content table td, table th {
+   padding-right:5px;
+   padding-left:5px; 
+   margin-left:0px;
+   margin-right:0px; 
+}
+
+#error {
+  padding: 1em 1em 1em 3em;
+  border: 2px solid #ff9595;
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  background: #ffd7d7 url(/images/warn_icon.gif) no-repeat 6px;
+  font-size: 1.1em;
+  cursor: pointer;
+  margin-bottom: 1em;
+}
+
+/* @group Comments */
+div.comments {
+	padding-top: 0.5em;
+}
+div.comment {
+    margin-top: 1em;
+	min-width: 600px;
+	margin-bottom: 1em;
+	background-color: #ddd;
+	border: 1px solid #ddd;
+}
+div.indent {
+	padding-left: 1em;
+	border-left: 4px solid #eee;
+}
+.comment > h3 {
+	font-size: 12pt;
+	padding: 0.15em;
+	padding-left: 0.5em;
+	padding-right: 0.75em;
+	font-weight:  bold;
+	background-color: #eee;
+}
+.comment > h4 {
+	font-size: 10pt;
+	padding: 0.15em;
+	padding-left: 0.5em;
+	padding-right: 0.75em;
+	font-weight:  bold;
+	background-color: #ddd;
+}
+.comment > .commentbody {
+	padding: 0.5em;
+}
+.comment > .meta {
+	padding-left: 0.5em;
+
+	font-size: 10pt;
+	padding-bottom: 0.25em;
+}
+
+.comment a:link,
+.comment a:visited {
+	color: #448;
+	text-decoration: none;
+}
+
+.comment a:hover,
+.comment a:focus,
+.comment a:active {
+	color: #222;
+	text-decoration: none;
+}
+
+.comment h3 input,
+.comment textarea {
+	width:  100%;
+}
+
+input[type="text"] {
+	background-color:#eee;
+}
+
+textarea {
+	background-color:#eee;
+}
+
+input[type="radio"] {
+    display: none
+}
+
+input[type="radio"] + label {
+    margin: 0;
+	padding: 0 0.25em;
+	color: #c0c0c0;
+    font-weight: bold;
+}
+
+input[type="radio"]:checked + label {
+    margin: 0;
+	padding: 0 0.25em;
+	color: #008cba;
+}
+
+.selection {
+	padding:0.5em 0.5em;
+}
+
+.fieldname {
+	font-size: 90%;
+	color: #c0c0c0;
+	margin: 0;
+}
+
+.fieldvalue {
+	margin: 0;
+	font-size: 100%;
+}
+
+/* @end */
+

@@ -1,0 +1,37 @@
+{{define "body"}}
+{{template "topbar" .}}
+<div class="row">
+<div class="small-12 columns">	
+
+<form action="{{.Action}}" method=POST>
+	
+<div class="row">
+<div class="medium-10 columns">
+<h1>{{.Title}}</h1>	
+</div>
+</div>
+	
+<div class="row">
+<div class="medium-6 columns">
+<p>{{.Message}}</p>
+</div>
+</div>
+	
+<div class="row">
+<div class="medium-6 columns">
+<label>Radar Number:<input type="text" name="number" value="{{.Number}}"/></label>
+</div>
+</div>
+
+<div class="row">
+<div class="medium-2 columns">
+<input type="submit" class="button" name="ok"/>
+</div>
+</div>
+
+</form>
+
+</div>
+</div>
+{{end}}
+

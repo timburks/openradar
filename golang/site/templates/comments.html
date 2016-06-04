@@ -1,0 +1,11 @@
+{{define "body"}}
+{{template "topbar" .}}
+<div class="row">
+<div class="small-12 columns">
+<h1>Recent Comments</h1>
+{{range .Comments}}
+{{template "comment" .}}
+{{end}}
+</div>
+</div>
+{{end}}

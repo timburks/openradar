@@ -1,0 +1,63 @@
+{{define "body"}}
+{{template "topbar" .}}
+<div class="row">
+<div class="small-12 medium-10 columns">	
+<form action="{{.Action}}" method=POST>
+	
+<div class="row">
+<div class="medium-10 columns">
+<h1>{{.Title}}</h1>	
+</div>
+<div class="medium-2 columns">
+<input type="submit" class="button" name="ok" value="Update"/>
+</div>
+</div>
+	
+{{if .Message}}
+<div class="row">
+<div class="small-12 columns">
+<div class="panel"><p>{{.Message}}</p></div>
+</div>
+</div>
+{{end}}
+	
+<div class="row">
+<div class="medium-12 columns">
+<label><h3>Title</h3><input type="text" size="70" name="title" value="{{.Radar.Title}}"/></label>
+</div>
+</div>
+
+<div class="row">
+<div class="medium-6 columns">
+<label><h3>Date Originated</h3><input type="text" name="originated" value="{{displayDate .Radar.Originated}}"/></label>		
+</div>
+<div class="medium-6 columns">
+<label><h3>Resolved</h3><input type="text" name="resolved" value="{{displayDate .Radar.Resolved}}"/></label>	
+</div>
+</div>
+
+<div class="row">
+<div class="medium-12 columns">
+<label><h3>Description</h3>
+<textarea cols="80" style="height:30em" name="description">{{.Radar.Description}}</textarea></label>
+</div>
+</div>
+
+<div class="row">
+<div class="medium-6 columns">
+{{template "selection" .Status}}
+{{template "selection" .Classification}}	
+{{template "selection" .Reproducibility}}
+</div>
+<div class="medium-6 columns">
+{{template "selection-grouped" .Product}}	
+<label><h3>Product Version</h3><input type="text" name="product_version" value="{{.Radar.ProductVersion}}"/></label>
+</div>
+</div>
+
+</form>
+<p><a class="button" href="/myradars/{{.Radar.Number}}/delete">Delete this Radar</a></p>
+</div>
+</div>
+{{end}}
+

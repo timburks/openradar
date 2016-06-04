@@ -1,0 +1,28 @@
+{{define "panel"}}
+<div class="panel" style="padding-top:0; padding-bottom:0; padding-left:15px; padding-right:15px">
+	<div class="row" style="background-color:#555; padding:0.5em 0">
+		<div class="small-4 columns">
+			<a style="color:#eee" href="/{{.Number}}">{{.Number}}</a>
+		</div>
+		<div class="small-4 columns" style="text-align:center; color:#eee">
+			{{.Status}}
+		</div>
+		<div class="small-4 columns" style="text-align:right; color:#eee">
+			{{.Created | ShortDateFormat}}
+		</div>
+	</div>
+	<div class="row" style="margin-top:1em; margin-bottom:1em">
+		<div class="small-12 small-offset-0 columns end">
+			<h5><a style="color:#000" href="/{{.Number}}">{{.Title}}</a></h5>
+		</div>
+	</div>
+	<div class="row" style="background-color:#DDD; padding:0.5em 0">
+		<div class="small-6 columns">
+			<a style="color:#000" href="/radars/{{.UserName | ScreenNameForUserName}}">{{.UserName | ScreenNameForUserName}}</a>
+		</div>
+		<div class="small-6 columns" style="text-align:right;">
+			{{.ProductVersion}}
+		</div>
+	</div>
+</div>
+{{end}}

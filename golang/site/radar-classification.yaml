@@ -1,0 +1,14 @@
+title: Classification
+id: classification
+values:
+- Security
+- Crash/Hang/Data Loss
+- Power
+- Performance
+- UI/Usability
+- Serious Bug
+- Other Bug
+- Feature (New)
+- Enhancement
+- Other
+- No Value

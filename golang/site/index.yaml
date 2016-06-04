@@ -1,0 +1,19 @@
+indexes:
+
+- kind: Comment
+  properties:
+  - name: RadarNumber
+  - name: Created
+
+- kind: Radar
+  properties:
+  - name: UserName
+  - name: RadarNumber
+    direction: desc
+
+- kind: Radar
+  properties:
+  - name: Status
+  - name: Product
+  - name: RadarNumber
+    direction: desc

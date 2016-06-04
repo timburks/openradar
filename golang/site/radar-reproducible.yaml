@@ -1,0 +1,11 @@
+title: Reproducible
+id: reproducible
+values:
+- Always
+- Sometimes
+- Rarely
+- Unable
+- "I Didn't Try"
+- Not Applicable
+- Other
+- No Value

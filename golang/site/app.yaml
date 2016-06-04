@@ -1,0 +1,17 @@
+application: openradar-golang
+version: 1
+runtime: go
+api_version: go1
+
+handlers:
+- url: /_ah/remote_api
+  script: _go_app
+  login: admin
+- url: /(.*\.(gif|png|jpg|ico|js|css|html))$
+  static_files: static/\1
+  upload: static/.*\.(gif|png|jpg|ico|js|css|html)$
+- url: /robots.txt
+  static_files: robots.txt
+  upload: static/robots.txt 
+- url: /(.*)$
+  script: _go_app

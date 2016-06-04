@@ -1,0 +1,26 @@
+
+ESSENTIAL CARRY FORWARDS
+
+- clean up data to use new Duplicating field
+- handle unenumerated selections
+- full text search (/search)
+- api support
+
+HIGH PRIORITY 
+
+- hide unpublished radars
+- collect product names and build page listing them
+- link from product names to radars for those products
+- link from user names to user radars and comments
+- rss feed
+- tweeting to openradarstream
+
+FUTURE
+
+- continuous scrolling
+- comment count on my radars page (build table of comment counts)
+- api usage monitoring
+- hit tracking / ranking of radars
+- starring and ranking of radars 
+- screen names
+- related issues field
