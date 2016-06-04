@@ -7,7 +7,11 @@
 <h1>Search Results</h1>
 <h2>Query: {{ query|escape }}</h2>
 
+{% if searchlist|length != 0 %}
 {{ searchlist }}
+{% else %}
+<p>No matching results found.</p>
+{% endif %}
 
 <p style="border-top:solid thin; margin-top:40px">Didn't find what you wanted? Try this Google Custom Search.</p>
 <script src="http://www.gmodules.com/ig/ifr?url=http://www.google.com/coop/api/001299279272833145671/cse/kt5shgezrrk/gadget&amp;synd=open&amp;w=320&amp;h=75&amp;title=Open+Radar+Search&amp;border=%23ffffff%7C0px%2C1px+solid+%23998899%7C0px%2C1px+solid+%23aa99aa%7C0px%2C2px+solid+%23bbaabb%7C0px%2C2px+solid+%23ccbbcc&amp;output=js"></script>

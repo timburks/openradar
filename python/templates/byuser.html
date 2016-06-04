@@ -3,7 +3,11 @@
 
 {% block content %}
 <h1>Radars posted by {{ username }}</h1>
+{% if radarlist|length != 0 %}
 {{ radarlist }}
+{% else %}
+<p>No matching results found.</p>
+{% endif %}
 {% endblock %}
 
 {% block sidebar %}
