@@ -18,9 +18,9 @@ from openradar.handlers import *
 class IndexAction(Handler):
   def get(self):
     self.redirect("/page/1")
-    
+
 class OldIndexAction(Handler):
-  def get(self):      
+  def get(self):
     biglist = memcache.get("biglist")
     if biglist is None:
       radars = db.GqlQuery("select * from Radar order by number_intvalue desc").fetch(100)
@@ -33,17 +33,17 @@ PAGESIZE = 40
 PAGE_PATTERN = re.compile("/page/([0-9]+)")
 
 class RadarListByPageAction(Handler):
-  def get(self):  
+  def get(self):
     m = PAGE_PATTERN.match(self.request.path)
     if m:
       number = m.group(1)
       if (int(number) > 500):
         self.error(404)
         self.respondWithText('Not found')
-        return 
+        return
       if (int(number) > 1):
         showprev = int(number)-1
-      else: 
+      else:
         showprev = None
       shownext = int(number)+1
       pagename = "page" + number
@@ -61,11 +61,11 @@ class RadarListByPageAction(Handler):
       self.respondWithText('invalid page request')
 
 class FAQAction(Handler):
-  def get(self):    
+  def get(self):
     self.respondWithTemplate('faq.html', {})
 
 class RadarAddAction(Handler):
-  def get(self):    
+  def get(self):
     user = self.GetCurrentUser()
     if (not user):
       self.respondWithTemplate('please-sign-in.html', {'action': 'add Radars'})
@@ -123,7 +123,7 @@ class RadarAddAction(Handler):
 
 RADAR_PATTERN = re.compile("/([0-9]+)")
 class RadarViewByPathAction(Handler):
-  def get(self):    
+  def get(self):
     user = users.GetCurrentUser()
     if not user:
         page = memcache.get(self.request.path)
@@ -133,7 +133,7 @@ class RadarViewByPathAction(Handler):
     m = RADAR_PATTERN.match(self.request.path)
     if m:
       bare = self.request.get("bare")
-      number = m.group(1) 
+      number = m.group(1)
       radars = Radar.gql("WHERE number = :1", number).fetch(1)
       if len(radars) != 1:
         self.respondWithTemplate('radar-missing.html', {"number":number})
@@ -141,10 +141,10 @@ class RadarViewByPathAction(Handler):
       radar = radars[0]
       if (not radar):
         self.respondWithTemplate('radar-missing.html', {"number":number})
-      else:	
-        path = os.path.join(os.path.dirname(__file__), os.path.join('templates', 'radar-view.html'))        
-        page = template.render(path, {"mine":(user == radar.user), "radar":radar, "radars":radar.children(), "comments": radar.comments(), "bare":bare})
-        if not user:	    
+      else:
+        path = os.path.join(os.path.dirname(__file__), os.path.join('templates', 'radar-view.html'))
+        page = template.render(path, {"mine":(user == radar.user), "radar":radar, "radars":radar.children(), "comments": radar.comments(), "bare":bare, "user": user})
+        if not user:
             memcache.add(self.request.path, page, 3600) # one hour, but we also invalidate on edits and adds
         self.respondWithText(page)
       return
@@ -159,7 +159,7 @@ class RadarViewByIdOrNumberAction(Handler):
       if (not radar):
         self.respondWithText('Invalid Radar id')
       else:
-        self.respondWithTemplate('radar-view.html', {"mine":(user == radar.user), "radar":radar, "radars":radar.children(), "comments": radar.comments()})
+        self.respondWithTemplate('radar-view.html', {"mine":(user == radar.user), "radar":radar, "radars":radar.children(), "comments": radar.comments(), "user": user})
       return
     number = self.request.get("number")
     if number:
@@ -167,9 +167,9 @@ class RadarViewByIdOrNumberAction(Handler):
       return
     else:
       self.respondWithText('Please specify a Radar by number or openradar id')
-    
+
 class RadarEditAction(Handler):
-  def get(self):    
+  def get(self):
     user = users.GetCurrentUser()
     if (not user):
       self.respondWithTemplate('please-sign-in.html', {'action': 'edit Radars'})
@@ -208,19 +208,19 @@ class RadarEditAction(Handler):
         radar.put()
         memcache.flush_all()
         self.redirect("/myradars")
-  
-class RadarFixNumberAction(Handler): 
+
+class RadarFixNumberAction(Handler):
   def post(self):
     id = self.request.get("id")
     radar = Radar.get_by_id(int(id))
     if not radar:
       self.respondWithText('Invalid Radar id')
     else:
-      radar.number_intvalue = int(radar.number)      
+      radar.number_intvalue = int(radar.number)
       radar.put()
       memcache.flush_all()
       self.respondWithText('OK')
-     
+
 class RadarDeleteAction(Handler):
   def get(self):
     user = users.GetCurrentUser()
@@ -236,7 +236,7 @@ class RadarDeleteAction(Handler):
       self.redirect("/myradars")
 
 class RadarListAction(Handler):
-  def get(self):    
+  def get(self):
     user = users.GetCurrentUser()
     if (not user):
       self.respondWithTemplate('please-sign-in.html', {'action': 'view your Radars'})
@@ -266,7 +266,7 @@ class HelloAction(Handler):
       print "Hello, %s!" % user.nickname()
 
 class APIKeyAction(Handler):
-  def get(self):    
+  def get(self):
     user = users.GetCurrentUser()
     if (not user):
       self.respondWithTemplate('please-sign-in.html', {'action': 'view or regenerate your API key'})
@@ -285,10 +285,10 @@ class APIKeyAction(Handler):
     else:
       apikey = openradar.db.APIKey().fetchByUser(user)
       if apikey:
-        apikey.delete()      
+        apikey.delete()
       self.redirect("/apikey")
-      
-    
+
+
 class APIRadarsAction(Handler):
   def get(self):
     user = self.GetCurrentUser()
@@ -317,15 +317,15 @@ class APIRadarsAction(Handler):
                     "created":str(r.created),
                     "description":r.description,
                     "modified":str(r.modified),
-                    "number":r.number, 
+                    "number":r.number,
                     "originated":r.originated,
                     "parent":r.parent_number,
                     "product":r.product,
                     "product_version":r.product_version,
                     "reproducible":r.reproducible,
                     "resolved":r.resolved,
-                    "status":r.status, 
-                    "title":r.title, 
+                    "status":r.status,
+                    "title":r.title,
                     "user":r.user.email()}
                    for r in radars]}
       apiresult = simplejson.dumps(response)
@@ -357,7 +357,7 @@ class APICommentsAction(Handler):
       try:
         commentInfo = {
           "id":c.key().id(),
-          "user":c.user.email(), 
+          "user":c.user.email(),
           "subject":c.subject,
           "body":c.body,
           "radar":c.radar.number,
@@ -365,13 +365,13 @@ class APICommentsAction(Handler):
         }
         if c.is_reply_to:
             commentInfo["is_reply_to"] = c.is_reply_to.key().id()
-        result.append(commentInfo)  
+        result.append(commentInfo)
       except Exception:
         None # we'll get here if the corresponding radar was deleted
     response = {"result":result}
     apiresult = simplejson.dumps(response)
     self.respondWithText(apiresult)
-    
+
 class APIRadarsNumbersAction(Handler):
   def get(self):
     page = self.request.get("page")
@@ -385,7 +385,7 @@ class APIRadarsNumbersAction(Handler):
       response = {"result":[r.number for r in radars]}
       apiresult = simplejson.dumps(response)
     self.respondWithText(apiresult)
-      
+
 class APIRadarsIDsAction(Handler):
   def get(self):
     page = self.request.get("page")
@@ -399,7 +399,7 @@ class APIRadarsIDsAction(Handler):
       response = {"result":[r.key().id() for r in radars]}
       apiresult = simplejson.dumps(response)
     self.respondWithText(apiresult)
-      
+
 class APIAddRadarAction(Handler):
   def post(self):
     user = self.GetCurrentUser()
@@ -433,9 +433,9 @@ class APIAddRadarAction(Handler):
       radar.put()
       memcache.flush_all()
       response = {"result":
-                   {"title":title, 
-                    "number":number, 
-                    "status":status, 
+                   {"title":title,
+                    "number":number,
+                    "status":status,
                     "description":description}}
       self.respondWithDictionaryAsJSON(response)
 
@@ -455,25 +455,25 @@ class CommentsAJAXFormAction(Handler):
       self.error(401)
       self.respondWithText("You must login to post a comment")
       return False, False, False
-    
+
     radarKey = self.request.get("radar")
     radar = Radar.get(radarKey)
-    
+
     if(not radar):
       self.error(400)
       self.respondWithText("Unknown radar key")
       return False, False, False
-      
-    
+
+
     replyKey = self.request.get("is_reply_to")
     replyTo = None
     if(replyKey):
       replyTo = Comment.get(replyKey)
-    
+
     return user, radar, replyTo
-    
+
   def get(self):
-    
+
     # Edit
     commentKey = self.request.get("key")
     if(commentKey):
@@ -484,23 +484,23 @@ class CommentsAJAXFormAction(Handler):
         return
       self.respondWithText(comment.form())
       return
-      
+
     # New or reply
     user, radar, replyTo = self._check()
     if(not user): return
-    
+
     args = {"radar": radar}
-    
+
     if(replyTo):
       args["is_reply_to"] = replyTo
-    
+
     self.respondWithText(Comment(**args).form())
-    
-    
+
+
   def post(self):
     user, radar, replyTo = self._check()
     if(not user): return
-    
+
     commentKey = self.request.get("key")
     comment = None
     if(commentKey):
@@ -511,7 +511,7 @@ class CommentsAJAXFormAction(Handler):
         return
     else:
       comment = Comment(user = user, radar = radar)
-    
+
     if(not self.request.get("cancel")):
       comment.is_reply_to = replyTo
       comment.subject = self.request.get("subject")
@@ -519,7 +519,7 @@ class CommentsAJAXFormAction(Handler):
     comment.put()
 
     self.respondWithText(comment.draw(commentKey != ""))
-    
+
 class CommentsAJAXRemoveAction(Handler):
   def post(self):
     user = users.GetCurrentUser()
@@ -527,24 +527,24 @@ class CommentsAJAXRemoveAction(Handler):
       self.error(401)
       self.respondWithText("You must login to remove a comment")
       return
-    
+
     commentKey = self.request.get("key")
     comment = Comment.get(commentKey)
     if(not comment):
       self.error(400)
       self.respondWithText("Tried to remove a post that doesn't exist? Couldn't find post to remove.")
       return
-    
+
     if(not comment.editable_by_current_user()):
       self.error(401)
       self.respondWithText("You must be the comment's owner, or an admin, to remove this comment.")
       return
-    
+
     if(comment.deleteOrBlank() == "blanked"):
       self.respondWithText(comment.html_body())
     else:
       self.respondWithText("REMOVED")
-    
+
 class CommentsRecentAction(Handler):
   def get(self):
     comments = db.GqlQuery("select * from Comment order by posted_at desc").fetch(20)
@@ -615,10 +615,10 @@ class APIRecentRadarsAction(Handler):
     results = []
     for r in radars:
       results.append({"id":r.key().id(),
-                      "title":r.title, 
-                      "number":r.number, 
+                      "title":r.title,
+                      "number":r.number,
                       "user":r.user.email(),
-                      "status":r.status, 
+                      "status":r.status,
                       "description":r.description,
                       "resolved":r.resolved,
                       "product":r.product,
@@ -657,7 +657,7 @@ class APIRecentCommentsAction(Handler):
                         "body":c.body,
                         "radar":c.radar.number,
                         "posted_at":str(c.posted_at),
-                        "is_reply_to":c.is_reply_to and c.is_reply_to.key().id() or None})  
+                        "is_reply_to":c.is_reply_to and c.is_reply_to.key().id() or None})
       except Exception:
         None
       if len(results) == 100:
@@ -665,7 +665,7 @@ class APIRecentCommentsAction(Handler):
     response = {"result":results, "cursor":comments.cursor()}
     apiresult = simplejson.dumps(response)
     self.respondWithText(apiresult)
-    
+
 def main():
   application = webapp.WSGIApplication([
     ('/', IndexAction),
@@ -702,7 +702,7 @@ def main():
     ('/search', SearchAction),
     ('/fixnumber', RadarFixNumberAction),
     ('/apikey', APIKeyAction),
-    # intentially disabled 
+    # intentially disabled
     # ('/api/secret', APISecretAction),
     # ('/reput', RePutAction),
     ('.*', NotFoundAction)
