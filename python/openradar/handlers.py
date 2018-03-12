@@ -10,7 +10,7 @@ import datetime
 import os
 import simplejson
 
-class Handler(webapp.RequestHandler):
+class RequestHandler(webapp.RequestHandler):
 
   def respondWithDictionaryAsJSON(self, d):
     self.response.out.write(simplejson.dumps(d) + "\n")

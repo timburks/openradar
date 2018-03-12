@@ -10,7 +10,7 @@ import db
 import handlers
 import models
 
-class Comment(handlers.Handler):
+class Comment(handlers.RequestHandler):
     """Provides web service methods that handle requests to /api/comment."""
     
     def get(self):
@@ -49,7 +49,7 @@ class Comment(handlers.Handler):
     def post(self):
         pass
         
-class CommentCount(handlers.Handler):
+class CommentCount(handlers.RequestHandler):
     """Provides web service methods that handle requests to api/comment/count."""
     
     def get(self):
@@ -65,7 +65,7 @@ class CommentCount(handlers.Handler):
         # Return the result
         self.respondWithDictionaryAsJSON({"result": result})
         
-class Radar(handlers.Handler):
+class Radar(handlers.RequestHandler):
     """Provides web service methods that handle requests to /api/radar."""
     
     def get(self):
@@ -193,7 +193,7 @@ class Radar(handlers.Handler):
         # Return the result
         self.respondWithDictionaryAsJSON({"result": result})
         
-class RadarCount(handlers.Handler):
+class RadarCount(handlers.RequestHandler):
     """Provides web service methods that handle requests to api/radar/count."""
     
     def get(self):
@@ -209,7 +209,7 @@ class RadarCount(handlers.Handler):
         # Return the result
         self.respondWithDictionaryAsJSON({"result": result})
         
-class Search(handlers.Handler):
+class Search(handlers.RequestHandler):
     """Provides web service methods that handle requests to api/search."""
     
     def get(self):
@@ -257,12 +257,12 @@ class Search(handlers.Handler):
         # Return the result
         self.respondWithDictionaryAsJSON({"result": result})
         
-class Test(handlers.Handler):
+class Test(handlers.RequestHandler):
     def get(self):
         result = {"foo":[1, 2, 3, {"bar": [4, 5, 6]}]}
         self.respondWithDictionaryAsJSON(result)
 
-class TestAuthentication(handlers.Handler):
+class TestAuthentication(handlers.RequestHandler):
     def get(self):
         user = self.GetCurrentUser()
         if user:
