@@ -12,8 +12,8 @@ from google.appengine.api import *
 
 import openradar.api
 import openradar.db
+from openradar.base import *
 from openradar.models import *
-from openradar.handlers import *
 
 class IndexAction(RequestHandler):
   def get(self):

@@ -7,10 +7,10 @@ import google.appengine.api.users
 import datetime
 import simplejson
 import db
-import handlers
+import base
 import models
 
-class Comment(handlers.RequestHandler):
+class Comment(base.RequestHandler):
     """Provides web service methods that handle requests to /api/comment."""
     
     def get(self):
@@ -49,7 +49,7 @@ class Comment(handlers.RequestHandler):
     def post(self):
         pass
         
-class CommentCount(handlers.RequestHandler):
+class CommentCount(base.RequestHandler):
     """Provides web service methods that handle requests to api/comment/count."""
     
     def get(self):
@@ -65,7 +65,7 @@ class CommentCount(handlers.RequestHandler):
         # Return the result
         self.respondWithDictionaryAsJSON({"result": result})
         
-class Radar(handlers.RequestHandler):
+class Radar(base.RequestHandler):
     """Provides web service methods that handle requests to /api/radar."""
     
     def get(self):
@@ -193,7 +193,7 @@ class Radar(handlers.RequestHandler):
         # Return the result
         self.respondWithDictionaryAsJSON({"result": result})
         
-class RadarCount(handlers.RequestHandler):
+class RadarCount(base.RequestHandler):
     """Provides web service methods that handle requests to api/radar/count."""
     
     def get(self):
@@ -209,7 +209,7 @@ class RadarCount(handlers.RequestHandler):
         # Return the result
         self.respondWithDictionaryAsJSON({"result": result})
         
-class Search(handlers.RequestHandler):
+class Search(base.RequestHandler):
     """Provides web service methods that handle requests to api/search."""
     
     def get(self):
@@ -257,12 +257,12 @@ class Search(handlers.RequestHandler):
         # Return the result
         self.respondWithDictionaryAsJSON({"result": result})
         
-class Test(handlers.RequestHandler):
+class Test(base.RequestHandler):
     def get(self):
         result = {"foo":[1, 2, 3, {"bar": [4, 5, 6]}]}
         self.respondWithDictionaryAsJSON(result)
 
-class TestAuthentication(handlers.RequestHandler):
+class TestAuthentication(base.RequestHandler):
     def get(self):
         user = self.GetCurrentUser()
         if user:
