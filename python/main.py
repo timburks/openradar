@@ -21,6 +21,7 @@ def main():
     ('/api/radars/ids',		openradar.api.RadarsIDs),
     ('/api/radars/numbers',	openradar.api.RadarsNumbers),
     ('/api/radars/recent',	openradar.api.RadarsRecent),
+    #DISABLED ('/api/secret',	openradar.api.Secret),
     ('/api/search',		openradar.api.Search),
     ('/api/test',		openradar.api.Test),
     ('/api/test_auth',		openradar.api.TestAuthentication),
@@ -29,6 +30,7 @@ def main():
     ('/comment/remove',		openradar.web.CommentsAJAXRemove),
     ('/comments',		openradar.web.CommentsRecent),
     ('/faq',			openradar.web.FAQ),
+    #DISABLED ('/fixnumber',	openradar.web.RadarFixNumber),
     ('/hello',			openradar.web.Hello),
     ('/loginurl',		openradar.web.Login),
     ('/myradars',		openradar.web.RadarList),
@@ -40,11 +42,8 @@ def main():
     ('/radarsby',		openradar.web.RadarsByUser),
     ('/rdar',			openradar.web.RadarViewByIdOrNumber),
     ('/refresh',		openradar.web.Refresh),
+    #DISABLED ('/reput',	openradar.web.RePut),
     ('/search',			openradar.web.Search),
-    # intentionally disabled
-    # ('/api/secret',		openradar.api.Secret),
-    # ('/reput',		openradar.web.RePut),
-    # ('/fixnumber',		openradar.web.RadarFixNumber),
     ('.*',			openradar.web.NotFound)
   ], debug=True)
   wsgiref.handlers.CGIHandler().run(application)
