@@ -1,3 +1,7 @@
+"""@package docstring
+Provides the base request handler.
+"""
+
 import wsgiref.handlers
 from google.appengine.api import users
 from google.appengine.ext import webapp

@@ -1,4 +1,7 @@
-#!/usr/bin/env python
+"""@package docstring
+Provides the web request handlers.
+"""
+
 import os, datetime, re, simplejson
 import urllib, base64, uuid
 

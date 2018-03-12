@@ -1,3 +1,7 @@
+"""@package docstring
+Provides the models used by the application.
+"""
+
 from google.appengine.ext import db
 from google.appengine.ext import search
 import datetime
