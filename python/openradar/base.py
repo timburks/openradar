@@ -1,3 +1,7 @@
+"""@package docstring
+Provides the base request handler.
+"""
+
 import wsgiref.handlers
 from google.appengine.api import users
 from google.appengine.ext import webapp
@@ -10,7 +14,7 @@ import datetime
 import os
 import simplejson
 
-class Handler(webapp.RequestHandler):
+class RequestHandler(webapp.RequestHandler):
 
   def respondWithDictionaryAsJSON(self, d):
     self.response.out.write(simplejson.dumps(d) + "\n")

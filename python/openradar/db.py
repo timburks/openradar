@@ -1,3 +1,7 @@
+"""@package docstring
+Provides database access for models.
+"""
+
 import models
 
 class Radar():
