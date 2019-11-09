@@ -124,9 +124,9 @@ class RadarAdd(RequestHandler):
             None # let's not worry about downstream problems
       self.redirect("/myradars")
 
-RADAR_PATTERN = re.compile("/([0-9]+)")
+RADAR_PATTERN = re.compile("/((FB)?[0-9]+)")
 class RadarViewByPath(RequestHandler):
-  def get(self):
+  def get(self, _prefix):
     user = users.GetCurrentUser()
     if not user:
         page = memcache.get(self.request.path)
