@@ -407,7 +407,6 @@ class RadarsAdd(base.RequestHandler):
       originated = self.request.get("originated")
       radar = Radar(title=title,
                     number=number,
-                    number_intvalue=int(number),
                     user=user,
                     status=status,
                     description=description,

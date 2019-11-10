@@ -91,7 +91,6 @@ class RadarAdd(RequestHandler):
       originated = self.request.get("originated")
       radar = Radar(title=title,
                     number=number,
-                    number_intvalue=int(number),
                     status=status,
                     user=user,
                     description=description,
@@ -198,7 +197,6 @@ class RadarEdit(RequestHandler):
       else:
         radar.title = self.request.get("title")
         radar.number = self.request.get("number")
-        radar.number_intvalue = int(self.request.get("number"))
         radar.status = self.request.get("status")
         radar.description = self.request.get("description")
         radar.resolved = self.request.get("resolved")
@@ -219,7 +217,6 @@ class RadarFixNumber(RequestHandler):
     if not radar:
       self.respondWithText('Invalid Radar id')
     else:
-      radar.number_intvalue = int(radar.number)
       radar.put()
       memcache.flush_all()
       self.respondWithText('OK')
