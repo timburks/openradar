@@ -26,7 +26,7 @@ class OldIndex(RequestHandler):
   def get(self):
     biglist = memcache.get("biglist")
     if biglist is None:
-      radars = db.GqlQuery("select * from Radar order by number_intvalue desc").fetch(100)
+      radars = db.GqlQuery("select * from Radar order by number desc").fetch(100)
       path = os.path.join(os.path.dirname(__file__), os.path.join('../templates', 'biglist.html'))
       biglist = template.render(path, {'radars':radars})
       memcache.add("biglist", biglist, 3600) # one hour, but we also invalidate on edits and adds
@@ -52,7 +52,7 @@ class RadarListByPage(RequestHandler):
       pagename = "page" + number
       biglist = memcache.get(pagename)
       if biglist is None:
-        radars = db.GqlQuery("select * from Radar order by number_intvalue desc").fetch(PAGESIZE,(int(number)-1)*PAGESIZE)
+        radars = db.GqlQuery("select * from Radar order by number desc").fetch(PAGESIZE,(int(number)-1)*PAGESIZE)
         if len(radars) > 0:
           path = os.path.join(os.path.dirname(__file__), os.path.join('../templates', 'biglist.html'))
           biglist = template.render(path, {'radars':radars})
@@ -241,7 +241,7 @@ class RadarList(RequestHandler):
     if (not user):
       self.respondWithTemplate('please-sign-in.html', {'action': 'view your Radars'})
     else:
-      radars = db.GqlQuery("select * from Radar where user = :1 order by number_intvalue desc", user).fetch(1000)
+      radars = db.GqlQuery("select * from Radar where user = :1 order by number desc", user).fetch(1000)
       self.respondWithTemplate('radar-list.html', {"radars": radars})
 
 class NotFound(RequestHandler):
@@ -396,7 +396,7 @@ class RadarsByUser(RequestHandler):
     user = users.User(username)
     searchlist = ""
     if user:
-      query = db.GqlQuery("select * from Radar where user = :1 order by number_intvalue desc", user)
+      query = db.GqlQuery("select * from Radar where user = :1 order by number desc", user)
       radars = query.fetch(100)
       if len(radars) > 0:
         path = os.path.join(os.path.dirname(__file__), os.path.join('../templates', 'biglist.html'))

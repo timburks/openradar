@@ -299,7 +299,7 @@ class Radars(base.RequestHandler):
       count = 100
     apiresult = memcache.get("apiresult")
     if apiresult is None:
-      radars = db.GqlQuery("select * from Radar order by number_intvalue desc").fetch(count,(page-1)*count)
+      radars = db.GqlQuery("select * from Radar order by number desc").fetch(count,(page-1)*count)
       response = {"result":
                   [{"id":r.key().id(),
                     "classification":r.classification,
@@ -370,7 +370,7 @@ class RadarsNumbers(base.RequestHandler):
       page = 1
     apiresult = memcache.get("apiresult")
     if apiresult is None:
-      radars = db.GqlQuery("select * from Radar order by number_intvalue desc").fetch(100,(page-1)*100)
+      radars = db.GqlQuery("select * from Radar order by number desc").fetch(100,(page-1)*100)
       response = {"result":[r.number for r in radars]}
       apiresult = simplejson.dumps(response)
     self.respondWithText(apiresult)
