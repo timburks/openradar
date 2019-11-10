@@ -8,7 +8,7 @@
 <form action="/myradars/edit?id={{ radar.key.id }}" method=POST>
 <div style="float:right"><input type="submit" name="ok"></input></div>
 <table>
-<tr><td>Number:</td><td><input type="text" name="number" value="{{ radar.number|default_if_none:"" }}"></input></td>
+<tr><td>Number:</td><td><input type="text" name="number" value="{{ radar.number|default_if_none:"" }}" title="/(FB)?[0-9]+/" pattern="(FB)?[0-9]+" required></input></td>
     <td>Date Originated:</td><td><input type="text" name="originated" value="{{ radar.originated|default_if_none:"" }}"></input></td></tr>
 <tr><td>Status:</td><td><input type="text" name="status" value="{{ radar.status|default_if_none:"" }}"></input></td>
     <td>Resolved:</td><td><input type="text" name="resolved" value="{{ radar.resolved|default_if_none:"" }}"></input></td></tr>

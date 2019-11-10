@@ -8,7 +8,7 @@
 <form action="/myradars/add" method=POST>
 <div style="float:right"><input type="submit" name="ok"/></div>
 <table>
-<tr><td>Number:</td><td><input type="text" name="number"/></td>
+<tr><td>Number:</td><td><input type="text" name="number" title="/(FB)?[0-9]+/" pattern="(FB)?[0-9]+" required/></td>
     <td>Date Originated:</td><td><input type="text" name="originated"/></td></tr>
 <tr><td>Status:</td><td><input type="text" name="status"/></td>
     <td>Resolved:</td><td><input type="text" name="resolved"/></td></tr>
