@@ -9,7 +9,7 @@ import openradar.web
 def main():
   application = webapp.WSGIApplication([
     ('/',			openradar.web.Index),
-    ('/[0-9]+',			openradar.web.RadarViewByPath),
+    ('/(FB)?[0-9]+',		openradar.web.RadarViewByPath),
     ('/api/comment',		openradar.api.Comment),
     ('/api/comment/count',	openradar.api.CommentCount),
     ('/api/comments',		openradar.api.Comments),

@@ -14,9 +14,8 @@ class Secret(db.Model):
 class Radar(search.SearchableModel):
     # This first set of properties are user-specified.
     # For flexibility and robustness, we represent them all as strings.
-    # The Radar Problem ID (we need an int form of this)
+    # The Radar Problem ID
     number = db.StringProperty()
-    number_intvalue = db.IntegerProperty()
     
     # The radar number this radar duplicates
     parent_number = db.StringProperty()
@@ -40,6 +39,8 @@ class Radar(search.SearchableModel):
     # They are automatically set when put() is called.
     # We will add more as needed to allow better performance or to simplify
     # sorting and querying.
+    # The integer part of the Radar Problem ID
+    number_intvalue = db.IntegerProperty()
     # when the OpenRadar object was last modified
     modified = db.DateTimeProperty()
     
@@ -70,6 +71,10 @@ class Radar(search.SearchableModel):
             self.description = self.description.strip()
         if (self.number):
             self.number = self.number.strip()
+            if self.number.startswith('FB'):
+              self.number_intvalue = int(self.number[2:])
+            else:
+              self.number_intvalue = int(self.number)
         if (self.originated):
             self.originated = self.originated.strip()
         if (self.product):

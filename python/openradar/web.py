@@ -26,7 +26,7 @@ class OldIndex(RequestHandler):
   def get(self):
     biglist = memcache.get("biglist")
     if biglist is None:
-      radars = db.GqlQuery("select * from Radar order by number_intvalue desc").fetch(100)
+      radars = db.GqlQuery("select * from Radar order by number desc").fetch(100)
       path = os.path.join(os.path.dirname(__file__), os.path.join('../templates', 'biglist.html'))
       biglist = template.render(path, {'radars':radars})
       memcache.add("biglist", biglist, 3600) # one hour, but we also invalidate on edits and adds
@@ -52,7 +52,7 @@ class RadarListByPage(RequestHandler):
       pagename = "page" + number
       biglist = memcache.get(pagename)
       if biglist is None:
-        radars = db.GqlQuery("select * from Radar order by number_intvalue desc").fetch(PAGESIZE,(int(number)-1)*PAGESIZE)
+        radars = db.GqlQuery("select * from Radar order by number desc").fetch(PAGESIZE,(int(number)-1)*PAGESIZE)
         if len(radars) > 0:
           path = os.path.join(os.path.dirname(__file__), os.path.join('../templates', 'biglist.html'))
           biglist = template.render(path, {'radars':radars})
@@ -91,7 +91,6 @@ class RadarAdd(RequestHandler):
       originated = self.request.get("originated")
       radar = Radar(title=title,
                     number=number,
-                    number_intvalue=int(number),
                     status=status,
                     user=user,
                     description=description,
@@ -124,9 +123,9 @@ class RadarAdd(RequestHandler):
             None # let's not worry about downstream problems
       self.redirect("/myradars")
 
-RADAR_PATTERN = re.compile("/([0-9]+)")
+RADAR_PATTERN = re.compile("/((FB)?[0-9]+)")
 class RadarViewByPath(RequestHandler):
-  def get(self):
+  def get(self, _prefix):
     user = users.GetCurrentUser()
     if not user:
         page = memcache.get(self.request.path)
@@ -198,7 +197,6 @@ class RadarEdit(RequestHandler):
       else:
         radar.title = self.request.get("title")
         radar.number = self.request.get("number")
-        radar.number_intvalue = int(self.request.get("number"))
         radar.status = self.request.get("status")
         radar.description = self.request.get("description")
         radar.resolved = self.request.get("resolved")
@@ -219,7 +217,6 @@ class RadarFixNumber(RequestHandler):
     if not radar:
       self.respondWithText('Invalid Radar id')
     else:
-      radar.number_intvalue = int(radar.number)
       radar.put()
       memcache.flush_all()
       self.respondWithText('OK')
@@ -244,7 +241,7 @@ class RadarList(RequestHandler):
     if (not user):
       self.respondWithTemplate('please-sign-in.html', {'action': 'view your Radars'})
     else:
-      radars = db.GqlQuery("select * from Radar where user = :1 order by number_intvalue desc", user).fetch(1000)
+      radars = db.GqlQuery("select * from Radar where user = :1 order by number desc", user).fetch(1000)
       self.respondWithTemplate('radar-list.html', {"radars": radars})
 
 class NotFound(RequestHandler):
@@ -399,7 +396,7 @@ class RadarsByUser(RequestHandler):
     user = users.User(username)
     searchlist = ""
     if user:
-      query = db.GqlQuery("select * from Radar where user = :1 order by number_intvalue desc", user)
+      query = db.GqlQuery("select * from Radar where user = :1 order by number desc", user)
       radars = query.fetch(100)
       if len(radars) > 0:
         path = os.path.join(os.path.dirname(__file__), os.path.join('../templates', 'biglist.html'))
